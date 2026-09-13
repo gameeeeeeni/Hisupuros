@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ひすプロ | 公式サイト</title>
+  <style>
+    /* --- カラー定義 & 基本設定 --- */
+    :root {
+      --primary-jade: #00A381;       /* 翡翠色（アクセント） */
+      --dark-jade: #00785E;          /* 濃い翡翠色（ホバー・見出し用） */
+      --light-jade: #E8F5F1;         /* 淡い翡翠色（背景用） */
+      --accent-yellow: #F6D067;      /* ロゴ連動アクセントイエロー */
+      --bg-white: #FFFFFF;           /* ベース白 */
+      --bg-offwhite: #F9FBFA;        /* セクション背景用オフホワイト */
+      --text-main: #2C3333;          /* メイン文字色 */
+      --text-sub: #596E79;           /* サブ文字色 */
+      --border-color: #E2E8E5;       /* 枠線 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-white);
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+    }
+
+    a {
+      color: var(--primary-jade);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--dark-jade);
+    }
+
+    /* --- ナビゲーションバー --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 5%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-logo-img {
+      height: 46px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-jade);
+    }
+
+    /* --- メインビジュアル（ヒーロー） --- */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 60%, var(--light-jade) 100%);
+      padding: 4.5rem 5% 4rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-logo-area {
+      margin-bottom: 2rem;
+    }
+
+    .hero-main-logo {
+      max-width: 320px;
+      width: 80%;
+      height: auto;
+      filter: drop-shadow(0 8px 16px rgba(0, 163, 129, 0.12));
+    }
+
+    .hero-sub {
+      display: inline-block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary-jade);
+      background: var(--light-jade);
+      padding: 0.4rem 1.4rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.35;
+      margin-bottom: 1.2rem;
+      color: var(--text-main);
+    }
+
+    .hero-lead {
+      max-width: 620px;
+      margin: 0 auto 2.2rem;
+      color: var(--text-sub);
+      font-size: 1rem;
+    }
+
+    .btn-contact {
+      display: inline-block;
+      background-color: var(--primary-jade);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border-radius: 4px;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0, 163, 129, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    .btn-contact:hover {
+      background-color: var(--dark-jade);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 163, 129, 0.35);
+    }
+
+    /* --- 共通セクションスタイル --- */
+    .section {
+      padding: 5rem 5%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-bg {
+      background-color: var(--bg-offwhite);
+      max-width: 100%;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 5rem 5%;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 0.8rem;
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background-color: var(--primary-jade);
+      border-radius: 2px;
+    }
+
+    .section-en {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--primary-jade);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.3rem;
+    }
+
+    /* --- 事業内容（カードグリッド 2列配置） --- */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2.2rem 1.8rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .service-card:hover {
+      border-color: var(--primary-jade);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0, 163, 129, 0.08);
+    }
+
+    .service-num {
+      color: var(--primary-jade);
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .service-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .service-desc {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.75;
+    }
+
+    /* --- 代表挨拶セクション --- */
+    .message-container {
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 3rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+    }
+
+    .message-header {
+      border-left: 4px solid var(--primary-jade);
+      padding-left: 1.2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .message-role {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 0.2rem;
+    }
+
+    .message-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .message-body {
+      font-size: 1rem;
+      line-height: 2;
+      color: var(--text-main);
+      margin-bottom: 2rem;
+    }
+
+    .message-profile {
+      background-color: var(--light-jade);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+
+    .profile-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--dark-jade);
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-text {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    /* --- 会社概要（テーブル） --- */
+    .company-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-white);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .company-table th, 
+    .company-table td {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      text-align: left;
+    }
+
+    .company-table tr:last-child th,
+    .company-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .company-table th {
+      width: 30%;
+      background-color: var(--light-jade);
+      color: var(--dark-jade);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .company-table td {
+      font-size: 0.95rem;
+    }
+
+    /* --- お問い合わせ --- */
+    .contact-box {
+      text-align: center;
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 3.5rem 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .contact-email {
+      display: inline-block;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--dark-jade);
+      margin: 1.5rem 0;
+      padding: 0.6rem 1.8rem;
+      background: var(--light-jade);
+      border-radius: 6px;
+      word-break: break-all;
+    }
+
+    /* --- フッター --- */
+    footer {
+      background-color: #1a2522;
+      color: #9ab3ac;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* スマホ対応の微調整 */
+    @media (max-width: 600px) {
+      .navbar {
+        padding: 0.8rem 4%;
+      }
+      .brand-logo-img {
+        height: 36px;
+      }
+      .message-container {
+        padding: 1.8rem;
+      }
+      .company-table th, .company-table td {
+        display: block;
+        width: 100%;
+      }
+      .company-table th {
+        padding-bottom: 0.4rem;
+        background-color: transparent;
+        color: var(--primary-jade);
+      }
+      .company-table td {
+        padding-top: 0.2rem;
+        padding-bottom: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <header class="navbar">
+    <a href="#" class="brand-logo-wrap">
+      <img src="logo.png" alt="ひすプロ ロゴ" class="brand-logo-img">
+    </a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#services">事業内容</a></li>
+        <li><a href="#message">代表挨拶</a></li>
+        <li><a href="#company">概要</a></li>
+        <li><a href="#contact">連絡先</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- メインビジュアル -->
+  <section class="hero">
+    <div class="hero-logo-area">
+      <img src="logo.png" alt="ひすプロ" class="hero-main-logo">
+    </div>
+    <span class="hero-sub">HISU-PRO</span>
+    <h1 class="hero-title">ひとつでも・素晴らしい・<br>プロジェクトを。</h1>
+    <p class="hero-lead">
+      身近な現場のサポートからWeb・クリエイティブ制作まで、<br>
+      確かな行動力と柔軟な発想で、あなたの「困った」や「挑戦」に伴走します。
+    </p>
+    <a href="#contact" class="btn-contact">お問い合わせはこちら</a>
+  </section>
+
+  <!-- 事業内容 -->
+  <div class="section-bg">
+    <div class="section-inner" id="services">
+      <div class="section-header">
+        <span class="section-en">Services</span>
+        <h2 class="section-title">事業内容</h2>
+      </div>
+
+      <div class="services-grid">
+        <!-- 01: 請負業務 -->
+        <div class="service-card">
+          <div class="service-num">01</div>
+          <h3 class="service-title">請負業務・各種代行</h3>
+          <p class="service-desc">
+            日常の細やかな作業から、各種行事やイベントの運営スタッフまで幅広く対応。「人手が足りない」「自分たちの代わりに動いてほしい」という現場に駆けつけ、柔軟かつ誠実にサポートいたします。
+          </p>
+        </div>
+
+        <!-- 02: 飲食マルシェ代行 -->
+        <div class="service-card">
+          <div class="service-num">02</div>
+          <h3 class="service-title">飲食・マルシェ出店代行</h3>
+          <p class="service-desc">
+            食品衛生責任者の資格を保持するスタッフが、キッチンカーや屋外マルシェなどの出店・運営をトータルサポート。現場のオペレーションや衛生面にも配慮し、安心・安全な出店体制を一緒に築きます。
+          </p>
+        </div>
+
+        <!-- 03: ウェブサイト作成 -->
+        <div class="service-card">
+          <div class="service-num">03</div>
+          <h3 class="service-title">Webサイト制作・公開作業</h3>
+          <p class="service-desc">
+            届けたい魅力や伝えたい想いを丁寧に言語化し、デザインからインターネット上への公開・運用までを一貫してサポート。初めてホームページを立ち上げる方でも安心してお任せいただけます。
+          </p>
+        </div>
+
+        <!-- 04: クリエイティブサポート -->
+        <div class="service-card">
+          <div class="service-num">04</div>
+          <h3 class="service-title">クリエイティブ＆活動サポート</h3>
+          <p class="service-desc">
+            各種イラスト・デザイン制作から、ストリーマー（配信者）の活動支援、オンライン・オフラインイベントや大会の企画・運営サポートまで。多彩なカルチャー領域を幅広くアシストいたします。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 代表挨拶 -->
+  <section class="section" id="message">
+    <div class="section-header">
+      <span class="section-en">Message</span>
+      <h2 class="section-title">代表挨拶</h2>
+    </div>
+
+    <div class="message-container">
+      <div class="message-header">
+        <div class="message-role">ひすプロ 代表</div>
+        <div class="message-name">古庄 陸大</div>
+      </div>
+      
+      <div class="message-body">
+        <p>
+          「ひすプロ」という屋号には、<strong>『ひとつでも・素晴らしい・プロジェクトを』</strong>という誓いが込められています。
+        </p>
+        <p style="margin-top: 1rem;">
+          規模の大小を問わず、日常の小さなお困りごとから大きなイベント、そしてWebやクリエイティブの制作まで、誠心誠意向き合ってまいります。持ちうる技術とフットワークの軽さを活かし、関わるすべての方にとって確かな価値を生み出せる存在でありたいと考えています。
+        </p>
+      </div>
+
+      <div class="message-profile">
+        <div class="profile-title">【プロフィール】</div>
+        <p class="profile-text">
+          福岡県北九州市出身。現場の実務代行からWeb制作、クリエイティブ制作まで多岐にわたる領域で活動。実践的なスキルと柔軟性を武器に、頼れるパートナーとしてプロジェクトに伴走します。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 会社概要 -->
+  <section class="section" id="company" style="padding-top: 0;">
+    <div class="section-header">
+      <span class="section-en">About Us</span>
+      <h2 class="section-title">事業概要</h2>
+    </div>
+
+    <table class="company-table">
+      <tr>
+        <th>屋号</th>
+        <td>ひすプロ（HISU-PRO）</td>
+      </tr>
+      <tr>
+        <th>代表者</th>
+        <td>古庄 陸大</td>
+      </tr>
+      <tr>
+        <th>事業内容</th>
+        <td>請負業務代行 / 飲食・マルシェ出店支援 / Webサイト制作・公開支援 / クリエイティブ・配信活動支援</td>
+      </tr>
+      <tr>
+        <th>所在地</th>
+        <td>福岡県北九州市（※必要に応じて記載）</td>
+      </tr>
+      <tr>
+        <th>お問い合わせ</th>
+        <td>gameni3024@gmail.com</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- お問い合わせ -->
+  <section class="section" id="contact" style="padding-top: 0;">
+    <div class="contact-box">
+      <div class="section-header" style="margin-bottom: 1.5rem;">
+        <span class="section-en">Contact</span>
+        <h2 class="section-title">お問い合わせ</h2>
+      </div>
+      <p style="color: var(--text-sub);">
+        お仕事のご相談やお見積もりのご依頼など、まずはお気軽にご連絡ください。
+      </p>
+      <a href="mailto:gameni3024@gmail.com" class="contact-email">gameni3024@gmail.com</a>
+      <p style="font-size: 0.85rem; color: #888;">※タップするとメールソフトが起動します</p>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer>
+    <p>&copy; 2026 ひすプロ All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
