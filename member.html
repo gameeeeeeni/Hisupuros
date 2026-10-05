@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>メンバー紹介 | ひすプロ</title>
+    <meta
+      name="description"
+      content="ひすプロ（HISU-PRO）のメンバー紹介ページです。多彩なスキルを持つメンバーが、あなたのプロジェクトに伴走・サポートいたします。"
+    />
+    <style>
+      /* --- カラー定義 & 基本設定 --- */
+      :root {
+        --primary-jade: #00A381;
+        --dark-jade: #00785E;
+        --light-jade: #E8F5F1;
+        --bg-white: #FFFFFF;
+        --bg-offwhite: #F9FBFA;
+        --text-main: #2C3333;
+        --text-sub: #596E79;
+        --border-color: #E2E8E5;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg-white);
+        line-height: 1.8;
+        letter-spacing: 0.05em;
+      }
+
+      a {
+        color: var(--primary-jade);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      /* --- ナビゲーションバー --- */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 5%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        border-bottom: 1px solid var(--border-color);
+        z-index: 100;
+      }
+
+      .brand-logo-img {
+        height: 46px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+      }
+
+      .nav-links a {
+        color: var(--text-main);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .nav-links a.active,
+      .nav-links a:hover {
+        color: var(--primary-jade);
+      }
+
+      /* --- ページヘッダー --- */
+      .page-header {
+        background: linear-gradient(135deg, #ffffff 60%, var(--light-jade) 100%);
+        padding: 3.5rem 5% 3rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .page-en {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--primary-jade);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.3rem;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 0.8rem;
+      }
+
+      .page-lead {
+        color: var(--text-sub);
+        font-size: 0.95rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* --- メンバー一覧 --- */
+      .members-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem 5%;
+      }
+
+      .members-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+      }
+
+      /* メンバーカード */
+      .member-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(0, 163, 129, 0.15);
+        border-color: var(--primary-jade);
+      }
+
+      .member-card-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--dark-jade);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 2;
+      }
+
+      .member-image-wrap {
+        width: 100%;
+        height: 260px;
+        background-color: var(--light-jade);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .member-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .avatar-placeholder {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-jade);
+        font-weight: 700;
+        font-size: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+
+      .member-body {
+        padding: 1.8rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-role {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--primary-jade);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+      }
+
+      .member-name-wrap {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 0.8rem;
+      }
+
+      .member-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .member-ruby {
+        font-size: 0.8rem;
+        color: var(--text-sub);
+      }
+
+      .member-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+      }
+
+      .tag {
+        font-size: 0.75rem;
+        background: var(--light-jade);
+        color: var(--dark-jade);
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .tap-hint {
+        margin-top: auto;
+        padding-top: 0.8rem;
+        font-size: 0.8rem;
+        color: var(--primary-jade);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* --- モーダル（詳細ポップアップ） --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background: var(--bg-white);
+        width: 100%;
+        max-width: 680px;
+        max-height: 90vh;
+        border-radius: 16px;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+      }
+
+      .modal-overlay.active .modal-content {
+        transform: translateY(0);
+      }
+
+      .modal-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.85);
+        border: none;
+        border-radius: 50%;
+        font-size: 1.4rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-main);
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: background 0.2s;
+      }
+
+      .modal-close-btn:hover {
+        background: #ffffff;
+      }
+
+      /* モーダル内ギャラリー（画像スライド） */
+      .gallery-slider {
+        position: relative;
+        width: 100%;
+        height: 320px;
+        background: #1a2522;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .gallery-main-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.4);
+        color: #fff;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+
+      .slider-btn:hover {
+        background: rgba(0,163,129,0.8);
+      }
+
+      .slider-btn.prev { left: 12px; }
+      .slider-btn.next { right: 12px; }
+
+      /* サムネイル一覧 */
+      .gallery-thumbnails {
+        display: flex;
+        gap: 8px;
+        padding: 10px 1.5rem;
+        background: var(--bg-offwhite);
+        overflow-x: auto;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .thumb-img {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        opacity: 0.6;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+
+      .thumb-img.active {
+        opacity: 1;
+        border-color: var(--primary-jade);
+      }
+
+      /* モーダル本文 */
+      .modal-body {
+        padding: 2rem;
+      }
+
+      .modal-bio {
+        font-size: 0.95rem;
+        color: var(--text-main);
+        line-height: 1.9;
+        margin-bottom: 1.8rem;
+        white-space: pre-wrap;
+      }
+
+      .modal-detail-section {
+        background: var(--bg-offwhite);
+        padding: 1.2rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-detail-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--primary-jade);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+
+      .back-home {
+        text-align: center;
+        margin-top: 4rem;
+      }
+
+      .btn-back {
+        display: inline-block;
+        background-color: var(--light-jade);
+        color: var(--dark-jade);
+        padding: 0.8rem 2rem;
+        border-radius: 6px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+      }
+
+      .btn-back:hover {
+        background-color: var(--primary-jade);
+        color: #ffffff;
+      }
+
+      footer {
+        background-color: #1a2522;
+        color: #9ab3ac;
+        text-align: center;
+        padding: 2.5rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 600px) {
+        .gallery-slider { height: 240px; }
+        .modal-body { padding: 1.2rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ナビゲーションバー -->
+    <header class="navbar">
+      <a href="index.html" class="brand-logo-wrap">
+        <img src="logo.png" alt="ひすプロ ロゴ" class="brand-logo-img" />
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html#services">事業内容</a></li>
+          <li><a href="members.html" class="active">メンバー</a></li>
+          <li><a href="index.html#company">概要</a></li>
+          <li><a href="index.html#contact">連絡先</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+      <span class="page-en">Our Team</span>
+      <h1 class="page-title">メンバー紹介</h1>
+      <p class="page-lead">
+        ひすプロを支えるメンバーのご紹介です。<br />カードをタップすると詳細やギャラリーをご覧いただけます。
+      </p>
+    </section>
+
+    <!-- メンバー一覧 -->
+    <main class="members-container">
+      <div class="members-grid" id="membersGrid">
+        <!-- JavaScriptで動的生成されます -->
+      </div>
+
+      <div class="back-home">
+        <a href="index.html" class="btn-back">← トップページに戻る</a>
+      </div>
+    </main>
+
+    <!-- 詳細モーダルポップアップ -->
+    <div class="modal-overlay" id="memberModal">
+      <div class="modal-content">
+        <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+
+        <!-- 画像ギャラリー -->
+        <div class="gallery-slider">
+          <button class="slider-btn prev" id="slidePrev">◀</button>
+          <img
+            id="galleryMainImg"
+            class="gallery-main-img"
+            src=""
+            alt="メンバー画像"
+          />
+          <button class="slider-btn next" id="slideNext">▶</button>
+        </div>
+        <div class="gallery-thumbnails" id="galleryThumbs"></div>
+
+        <!-- 詳細情報 -->
+        <div class="modal-body">
+          <span class="member-role" id="modalRole">ROLE</span>
+          <div class="member-name-wrap">
+            <h2 class="member-name" id="modalName">名前</h2>
+            <span class="member-ruby" id="modalRuby">ふりがな</span>
+          </div>
+          <div class="member-tags" id="modalTags"></div>
+
+          <p class="modal-bio" id="modalBio"></p>
+
+          <div class="modal-detail-section" id="modalExtraSection">
+            <div class="modal-detail-title">得意分野・実績など</div>
+            <div
+              id="modalExtraContent"
+              style="font-size: 0.9rem; color: var(--text-sub);"
+            ></div>
+          </div>
+
+          <div class="member-sns" id="modalSns"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+      <p>&copy; 2026 ひすプロ All Rights Reserved.</p>
+    </footer>
+
+    <!-- スクリプト制御 -->
+    <script>
+      // ----------------------------------------------------
+      // メンバーデータの設定（ここを書き換えて増減できます！）
+      // ----------------------------------------------------
+      const membersData = [
+        {
+          id: "rikuto",
+          name: "古庄 陸大",
+          ruby: "ふるしょう りくと",
+          role: "代表 / Founder",
+          tags: ["全体統括", "Web制作", "イベント運営", "飲食マルシェ"],
+          // サムネイル画像（一覧用）
+          cardImg: "logo.png", // 画像がない場合は空文字 "" にするとイニシャル表示
+          // ランダム＆ギャラリー用の複数画像リスト
+          images: [
+            "logo.png",
+            "https://via.placeholder.com/600x400/00A381/FFFFFF?text=Rikuto+1",
+            "https://via.placeholder.com/600x400/00785E/FFFFFF?text=Rikuto+2"
+          ],
+          bio: "福岡県北九州市出身。「ひとつでも・素晴らしい・プロジェクトを」を理念にひすプロを立ち上げる。\n現場の請負代行からWebサイト構築、マルシェ出店サポートまで、幅広く事業を展開中。",
+          extra: "【得意領域】\n・イベント現場の運営統括\n・HTML/CSS/JSによるWeb構築\n・店舗マスタ・自動化ツールの運用",
+          sns: [
+            { name: "Instagram", url: "https://www.instagram.com/kameni3024" }
+          ]
+        },
+        {
+          id: "member2",
+          name: "新メンバー名前",
+          ruby: "しんめんばー",
+          role: "スタッフ / Staff",
+          tags: ["イベントサポート", "接客", "クリエイティブ"],
+          cardImg: "",
+          images: [
+            "https://via.placeholder.com/600x400/00A381/FFFFFF?text=Member+Photo+A",
+            "https://via.placeholder.com/600x400/596E79/FFFFFF?text=Member+Photo+B"
+          ],
+          bio: "ひすプロの新メンバーです！現場でのスムーズな連携と明るい接客でイベントや事業を強力にバックアップします。",
+          extra: "【メッセージ】\nプロジェクトごとの課題に合わせて柔軟に対応します！お気軽にお声がけください。",
+          sns: []
+        }
+      ];
+
+      // ----------------------------------------------------
+      // DOM要素と状態管理
+      // ----------------------------------------------------
+      let currentMember = null;
+      let currentImgIndex = 0;
+
+      const membersGrid = document.getElementById('membersGrid');
+      const modal = document.getElementById('memberModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const galleryMainImg = document.getElementById('galleryMainImg');
+      const galleryThumbs = document.getElementById('galleryThumbs');
+      const slidePrev = document.getElementById('slidePrev');
+      const slideNext = document.getElementById('slideNext');
+
+      // 1. メンバーカードの動的生成
+      function renderMembers() {
+        membersGrid.innerHTML = membersData.map((m, index) => {
+          const initial = m.name.charAt(0);
+          const imageContent = m.cardImg
+            ? `<img src="${m.cardImg}" alt="${m.name}" class="member-img">`
+            : `<div class="avatar-placeholder">${initial}</div>`;
+
+          return `
+            <article class="member-card" onclick="openMemberModal(${index})">
+              <span class="member-card-badge">Tap for detail</span>
+              <div class="member-image-wrap">
+                ${imageContent}
+              </div>
+              <div class="member-body">
+                <span class="member-role">${m.role}</span>
+                <div class="member-name-wrap">
+                  <h2 class="member-name">${m.name}</h2>
+                  <span class="member-ruby">${m.ruby}</span>
+                </div>
+                <div class="member-tags">
+                  ${m.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                </div>
+                <div class="tap-hint">
+                  詳細・フォトギャラリーを見る ↗
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      // 2. モーダルを開く（ランダム画像選択）
+      function openMemberModal(index) {
+        currentMember = membersData[index];
+
+        // 画像リストからランダムな1枚を初期表示に選ぶ
+        if (currentMember.images && currentMember.images.length > 0) {
+          currentImgIndex = Math.floor(Math.random() * currentMember.images.length);
+        } else {
+          currentImgIndex = 0;
+        }
+
+        // 詳細情報の挿入
+        document.getElementById('modalRole').textContent = currentMember.role;
+        document.getElementById('modalName').textContent = currentMember.name;
+        document.getElementById('modalRuby').textContent = currentMember.ruby;
+        document.getElementById('modalBio').textContent = currentMember.bio;
+
+        document.getElementById('modalTags').innerHTML =
+          currentMember.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+        document.getElementById('modalExtraContent').innerText = currentMember.extra || "特記事項なし";
+
+        // SNSリンク
+        const snsContainer = document.getElementById('modalSns');
+        if (currentMember.sns && currentMember.sns.length > 0) {
+          snsContainer.innerHTML = currentMember.sns.map(s =>
+            `<a href="${s.url}" target="_blank" class="sns-link" style="color:var(--primary-jade); font-weight:700;">${s.name} ↗</a>`
+          ).join('');
+        } else {
+          snsContainer.innerHTML = `<span style="font-size:0.8rem; color:#888;">SNS準備中</span>`;
+        }
+
+        // ギャラリー更新
+        updateGallery();
+
+        // モーダル表示
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // 背景スクロール防止
+      }
+
+      // 3. ギャラリー画像の更新
+      function updateGallery() {
+        const imgs = currentMember.images || [];
+
+        if (imgs.length === 0) {
+          galleryMainImg.src = currentMember.cardImg || "";
+          galleryThumbs.innerHTML = "";
+          slidePrev.style.display = 'none';
+          slideNext.style.display = 'none';
+          return;
+        }
+
+        galleryMainImg.src = imgs[currentImgIndex];
+
+        // スライドボタンの表示切り替え
+        slidePrev.style.display = imgs.length > 1 ? 'flex' : 'none';
+        slideNext.style.display = imgs.length > 1 ? 'flex' : 'none';
+
+        // サムネイル画像の生成
+        galleryThumbs.innerHTML = imgs.map((img, idx) => `
+          <img
+            src="${img}"
+            class="thumb-img ${idx === currentImgIndex ? 'active' : ''}"
+            onclick="selectGalleryImage(${idx})"
+          >
+        `).join('');
+      }
+
+      function selectGalleryImage(idx) {
+        currentImgIndex = idx;
+        updateGallery();
+      }
+
+      // スライド操作（前へ・次へ）
+      slidePrev.addEventListener('click', () => {
+        const imgs = currentMember.images || [];
+        currentImgIndex = (currentImgIndex - 1 + imgs.length) % imgs.length;
+        updateGallery();
+      });
+
+      slideNext.addEventListener('click', () => {
+        const imgs = currentMember.images || [];
+        currentImgIndex = (currentImgIndex + 1) % imgs.length;
+        updateGallery();
+      });
+
+      // モーダルを閉じる
+      function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      modalCloseBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // 初期化実行
+      renderMembers();
+    </script>
+  </body>
+</html>
