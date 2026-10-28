@@ -204,6 +204,43 @@
       margin-right: 0.7rem;
     }
 
+    /* --- お気に入りの曲（プレイリスト） --- */
+    .player-status {
+      color: var(--jade-bright);
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      margin-bottom: 0.5rem;
+    }
+
+    .player-title { font-size: 1.25rem; font-weight: 800; }
+
+    .player-artist { color: var(--text-sub); font-size: 0.92rem; }
+
+    .player-comment {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      margin-top: 0.7rem;
+    }
+
+    .player-list {
+      list-style: none;
+      margin-top: 1.1rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .player-list li {
+      padding: 0.5rem 0.2rem;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+
+    .track-no {
+      color: var(--jade-bright);
+      font-family: "Courier New", monospace;
+      font-weight: 700;
+      margin-right: 0.8rem;
+    }
+
     /* --- 閲覧カウンター --- */
     .counter-window {
       max-width: 420px;
@@ -428,10 +465,36 @@
     <!-- ▲▲▲ 裏話ブロックここまで ▲▲▲ -->
   </section>
 
+  <!-- お気に入りの曲 -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-no">03 / MY PLAYLIST</span>
+      <h2 class="section-title">FAVORITE SONGS</h2>
+      <span class="section-sub">代表のお気に入りの曲</span>
+    </div>
+
+    <div class="window">
+      <div class="window-bar"><span>♪ HISUPURO_PLAYER.EXE ♫</span><span class="win-x">×</span></div>
+      <div class="window-body">
+        <p class="player-status">♪ NOW PLAYING ♪</p>
+        <!-- ▼ 紹介する曲はここを差し替えます（曲名／アーティスト／ひとこと）。リンクも付けられます ▼ -->
+        <h3 class="player-title">曲名 ― 準備中</h3>
+        <p class="player-artist">アーティスト名</p>
+        <p class="player-comment">ここに曲へのひとことコメントが入ります。お気に入りの曲を少しずつ追加していくよ。</p>
+        <ol class="player-list">
+          <li><span class="track-no">01</span>曲名未定 ― アーティスト未定</li>
+          <li><span class="track-no">02</span>曲名未定 ― アーティスト未定</li>
+          <li><span class="track-no">03</span>曲名未定 ― アーティスト未定</li>
+        </ol>
+        <!-- ▲ 曲リストここまで ▲ -->
+      </div>
+    </div>
+  </section>
+
   <!-- これからのコーナー -->
   <section class="section">
     <div class="section-head">
-      <span class="section-no">03 / COMING SOON</span>
+      <span class="section-no">04 / COMING SOON</span>
       <h2 class="section-title">これから増える場所</h2>
     </div>
 
