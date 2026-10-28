@@ -204,6 +204,112 @@
       margin-right: 0.7rem;
     }
 
+    /* --- 閲覧カウンター --- */
+    .counter-window {
+      max-width: 420px;
+      margin: 2.2rem auto 0;
+      text-align: left;
+    }
+
+    .counter-body { text-align: center; }
+
+    .counter-digits {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 0.7rem;
+    }
+
+    .counter-digits span {
+      display: inline-block;
+      min-width: 34px;
+      padding: 0.2rem 0;
+      background: #0A0F0D;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--jade-bright);
+      font-family: "Courier New", monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .counter-text { color: var(--text-sub); font-size: 0.88rem; }
+
+    .counter-text strong { color: var(--text); }
+
+    /* --- キリ番演出 --- */
+    .kiriban-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 6, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 1.2rem;
+    }
+
+    .kiriban-overlay.show { display: flex; }
+
+    .kiriban-card {
+      background: var(--panel);
+      border: 2px solid var(--accent-yellow);
+      border-radius: 12px;
+      padding: 2rem 1.8rem;
+      text-align: center;
+      max-width: 420px;
+      box-shadow: 0 0 40px rgba(246, 208, 103, 0.35);
+      animation: kiribanPop 0.45s ease;
+    }
+
+    @keyframes kiribanPop {
+      0% { transform: scale(0.7); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .kiriban-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      margin-bottom: 0.6rem;
+    }
+
+    .kiriban-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--jade-bright);
+    }
+
+    .kiriban-close {
+      margin-top: 1.2rem;
+      background: var(--jade);
+      color: #fff;
+      border: none;
+      padding: 0.55rem 1.6rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .kiriban-close:hover { background: var(--dark-jade); }
+
+    .confetti {
+      position: fixed;
+      top: -12px;
+      width: 9px;
+      height: 14px;
+      z-index: 60;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      to { transform: translateY(105vh) rotate(720deg); opacity: 0.9; }
+    }
+
     /* --- フッター --- */
     footer {
       text-align: center;
@@ -238,6 +344,18 @@
       よく見つけたね。ここは、公式サイトで代表の名前を5回タップした人だけがたどり着ける、ひすプロの裏サイト。
       表では言えない裏話や、代表の素顔を、少しずつ置いていく場所です。
     </p>
+
+    <!-- 閲覧カウンター -->
+    <div class="window counter-window">
+      <div class="window-bar"><span>ACCESS_COUNTER.EXE</span><span class="win-x">×</span></div>
+      <div class="window-body counter-body">
+        <div class="counter-digits" id="counterDigits" aria-label="アクセスカウンター">
+          <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span>
+        </div>
+        <p class="counter-text" id="counterText">カウンター読み込み中…</p>
+      </div>
+    </div>
+
     <p class="hero-scroll">SCROLL TO EXPLORE ↓</p>
   </header>
 
@@ -333,6 +451,77 @@
     <p><a href="index.html">← 表サイトに戻る</a></p>
     <p style="margin-top: 0.8rem;">&copy; 2026 ひすプロ 裏サイト</p>
   </footer>
+
+  <!-- キリ番ゲット時の特殊演出 -->
+  <div class="kiriban-overlay" id="kiribanOverlay">
+    <div class="kiriban-card">
+      <p class="kiriban-title">🎉 キリ番ゲット！ 🎉</p>
+      <p>あなたは記念すべき</p>
+      <p class="kiriban-num"><span id="kiribanNum">0</span> 人目</p>
+      <p style="margin-top: 0.6rem;">の訪問者です！<br>スクショを撮って、代表に教えてあげてね。</p>
+      <button class="kiriban-close" id="kiribanClose" type="button">とじる</button>
+    </div>
+  </div>
+
+  <script>
+    // 閲覧カウンター：外部カウンターAPIで全訪問者共有の累計を数えます
+    (function () {
+      var digitsEl = document.getElementById('counterDigits');
+      var textEl = document.getElementById('counterText');
+
+      function renderDigits(n) {
+        var s = String(n);
+        while (s.length < 6) s = '0' + s;
+        digitsEl.innerHTML = s.split('').map(function (c) {
+          return '<span>' + c + '</span>';
+        }).join('');
+      }
+
+      // キリ番の定義：10・50人目、100の倍数、ゾロ目（11、111、777など）
+      function isKiriban(n) {
+        if (n < 10) return false;
+        if (n === 10 || n === 50) return true;
+        if (n % 100 === 0) return true;
+        if (/^(\d)\1+$/.test(String(n))) return true;
+        return false;
+      }
+
+      function celebrate(n) {
+        document.getElementById('kiribanNum').textContent = n.toLocaleString('ja-JP');
+        var overlay = document.getElementById('kiribanOverlay');
+        overlay.classList.add('show');
+        document.getElementById('kiribanClose').addEventListener('click', function () {
+          overlay.classList.remove('show');
+        });
+        var colors = ['#00A381', '#2BD9AE', '#F6D067', '#FFFFFF', '#7FE7C8'];
+        for (var i = 0; i < 70; i++) {
+          var p = document.createElement('div');
+          p.className = 'confetti';
+          p.style.left = Math.random() * 100 + 'vw';
+          p.style.background = colors[i % colors.length];
+          p.style.animationDuration = (2.2 + Math.random() * 2.2) + 's';
+          p.style.animationDelay = (Math.random() * 0.9) + 's';
+          document.body.appendChild(p);
+          (function (node) {
+            setTimeout(function () { node.remove(); }, 6000);
+          })(p);
+        }
+      }
+
+      fetch('https://abacus.jasoncameron.dev/hit/hisupro-himitsukichi-2026/visits')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var n = data && typeof data.value === 'number' ? data.value : null;
+          if (n === null) throw new Error('no value');
+          renderDigits(n);
+          textEl.innerHTML = 'あなたは <strong>' + n.toLocaleString('ja-JP') + ' 人目</strong> の訪問者です';
+          if (isKiriban(n)) celebrate(n);
+        })
+        .catch(function () {
+          textEl.textContent = 'カウンターは休憩中みたい…また今度数えてね';
+        });
+    })();
+  </script>
 
 </body>
 </html>
