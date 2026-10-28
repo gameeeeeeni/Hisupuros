@@ -218,6 +218,23 @@
         color: var(--text-main);
       }
 
+      .member-name.secret-name {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+      }
+
+      .member-name.secret-pulse {
+        animation: secretPulse 0.18s ease;
+      }
+
+      @keyframes secretPulse {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.07); color: var(--primary-jade); }
+        100% { transform: scale(1); }
+      }
+
       .member-ruby {
         font-size: 0.8rem;
         color: var(--text-sub);
@@ -603,7 +620,7 @@
               <div class="member-body">
                 <span class="member-role">${m.role}</span>
                 <div class="member-name-wrap">
-                  <h2 class="member-name">${m.name}</h2>
+                  <h2 class="member-name${m.id === 'rikuto' ? ' secret-name' : ''}"${m.id === 'rikuto' ? ' data-secret-name="true"' : ''}>${m.name}</h2>
                   <span class="member-ruby">${m.ruby}</span>
                 </div>
                 <div class="member-tags">
@@ -717,6 +734,31 @@
 
       // 初期化実行
       renderMembers();
+
+      // ----------------------------------------------------
+      // 隠しコマンド：代表（rikuto）の名前を5回タップすると裏サイト（ひみつきち）へ
+      // ※名前へのタップではモーダルを開かないよう、クリックの伝播を止めています
+      // ----------------------------------------------------
+      (function () {
+        var el = document.querySelector('[data-secret-name="true"]');
+        if (!el) return;
+        var count = 0;
+        var timer = null;
+        el.addEventListener('click', function (e) {
+          e.stopPropagation();
+          count++;
+          el.classList.remove('secret-pulse');
+          void el.offsetWidth;
+          el.classList.add('secret-pulse');
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(function () { count = 0; }, 2500);
+          if (count >= 5) {
+            count = 0;
+            if (timer) clearTimeout(timer);
+            window.location.href = 'himitsukichi.html';
+          }
+        });
+      })();
     </script>
   </body>
 </html>

@@ -282,20 +282,6 @@
       font-size: 1.6rem;
       font-weight: 700;
       color: var(--text-main);
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      user-select: none;
-      touch-action: manipulation;
-    }
-
-    .message-name.secret-pulse {
-      animation: secretPulse 0.18s ease;
-    }
-
-    @keyframes secretPulse {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.07); color: var(--primary-jade); }
-      100% { transform: scale(1); }
     }
 
     .insta-icon-link {
@@ -544,7 +530,7 @@
       <div class="message-header">
         <div>
           <div class="message-role">ひすプロ 代表</div>
-          <div class="message-name" id="repName">古庄 陸大（がめにぃ）</div>
+          <div class="message-name">古庄 陸大（がめにぃ）</div>
         </div>
         <!-- 個人Instagramリンク -->
         <a href="https://www.instagram.com/kameni3024?stkn=a2F5ZXJjMmxjdXFj" target="_blank" rel="noopener noreferrer" class="insta-icon-link" title="古庄 陸大 Instagram">
@@ -641,29 +627,6 @@
   <footer>
     <p>&copy; 2026 ひすプロ All Rights Reserved.</p>
   </footer>
-
-  <!-- 隠しコマンド：代表の名前を5回タップすると裏サイト（ひみつきち）へ -->
-  <script>
-    (function () {
-      var el = document.getElementById('repName');
-      if (!el) return;
-      var count = 0;
-      var timer = null;
-      el.addEventListener('click', function () {
-        count++;
-        el.classList.remove('secret-pulse');
-        void el.offsetWidth;
-        el.classList.add('secret-pulse');
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(function () { count = 0; }, 2500);
-        if (count >= 5) {
-          count = 0;
-          if (timer) clearTimeout(timer);
-          window.location.href = 'himitsukichi.html';
-        }
-      });
-    })();
-  </script>
 
 </body>
 </html>
