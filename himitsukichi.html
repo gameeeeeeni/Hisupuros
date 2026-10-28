@@ -241,6 +241,13 @@
       margin-right: 0.8rem;
     }
 
+    .player-list a, .player-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .player-list a:hover, .player-title a:hover { color: var(--jade-bright); }
+
     /* --- 閲覧カウンター --- */
     .counter-window {
       max-width: 420px;
@@ -478,13 +485,15 @@
       <div class="window-body">
         <p class="player-status">♪ NOW PLAYING ♪</p>
         <!-- ▼ 紹介する曲はここを差し替えます（曲名／アーティスト／ひとこと）。リンクも付けられます ▼ -->
-        <h3 class="player-title">曲名 ― 準備中</h3>
-        <p class="player-artist">アーティスト名</p>
-        <p class="player-comment">ここに曲へのひとことコメントが入ります。お気に入りの曲を少しずつ追加していくよ。</p>
+        <h3 class="player-title"><a href="https://open.spotify.com/track/20lnGACg6hyACeByfKB9mX" target="_blank" rel="noopener noreferrer">YATTA!</a></h3>
+        <p class="player-artist">バンドじゃないもん！MAXX NAKAYOSHI</p>
+        <p class="player-comment">代表のお気に入り5曲。曲名をタップするとSpotifyで聴けるよ。</p>
         <ol class="player-list">
-          <li><span class="track-no">01</span>曲名未定 ― アーティスト未定</li>
-          <li><span class="track-no">02</span>曲名未定 ― アーティスト未定</li>
-          <li><span class="track-no">03</span>曲名未定 ― アーティスト未定</li>
+          <li><span class="track-no">01</span><a href="https://open.spotify.com/track/20lnGACg6hyACeByfKB9mX" target="_blank" rel="noopener noreferrer">YATTA! ― バンドじゃないもん！MAXX NAKAYOSHI</a></li>
+          <li><span class="track-no">02</span><a href="https://open.spotify.com/track/2oAtPi4M1PQ6LPppgvQeAj" target="_blank" rel="noopener noreferrer">I'm proud (Radio Edit) ― 華原朋美</a></li>
+          <li><span class="track-no">03</span><a href="https://open.spotify.com/track/1Ipub3gAmmlpXoH5v8ORxP" target="_blank" rel="noopener noreferrer">About You ― 浜崎あゆみ</a></li>
+          <li><span class="track-no">04</span><a href="https://open.spotify.com/track/7hcwMf3dOcRXnA8qCM7eHE" target="_blank" rel="noopener noreferrer">START IT AGAIN ― AK-69</a></li>
+          <li><span class="track-no">05</span><a href="https://open.spotify.com/track/633Dfo6cWXJy1hYZynxNnO" target="_blank" rel="noopener noreferrer">ルパン・ザ・ファイヤー ― SEAMO</a></li>
         </ol>
         <!-- ▲ 曲リストここまで ▲ -->
       </div>
