@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>タイピングバトル | ひすプロのひみつきち</title>
+  <meta name="description" content="ひみつきち限定の早打ちタイピング勝負。キーボード部門とフリック部門、ランキングで勝負しよう。">
+  <style>
+    :root {
+      --jade: #00A381;
+      --jade-bright: #2BD9AE;
+      --dark-jade: #00785E;
+      --accent-yellow: #F6D067;
+      --bg: #0C1210;
+      --panel: #141D18;
+      --panel-bar: #1B2A22;
+      --border: #2A3D33;
+      --text: #E8F0EC;
+      --text-sub: #9DB4A8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.9;
+      letter-spacing: 0.05em;
+    }
+
+    /* --- ステータスバー --- */
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 5%;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      letter-spacing: 0.15em;
+    }
+
+    .online-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jade-bright);
+      margin-right: 0.45rem;
+      animation: blink 1.6s ease infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    /* --- ヒーロー --- */
+    .hero {
+      text-align: center;
+      padding: 3rem 5% 1.6rem;
+    }
+
+    .hero-kicker {
+      color: var(--accent-yellow);
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .hero-title .exe { color: var(--jade-bright); }
+
+    .hero-lead {
+      margin: 1.4rem auto 0;
+      max-width: 560px;
+      color: var(--text-sub);
+      font-size: 0.98rem;
+      text-align: left;
+    }
+
+    /* --- セクション --- */
+    .section {
+      padding: 1.6rem 5% 0.6rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-no {
+      color: var(--jade-bright);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .section-sub { color: var(--text-sub); font-size: 0.9rem; }
+
+    /* --- ウィンドウ風カード --- */
+    .window {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.4rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .window-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-bar);
+      border-bottom: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      color: var(--text-sub);
+    }
+
+    .window-bar .win-x { color: var(--text-sub); font-weight: 700; }
+
+    .window-body { padding: 1.4rem 1.5rem 1.6rem; }
+
+    /* --- フッター --- */
+    footer {
+      text-align: center;
+      padding: 3rem 5% 2.6rem;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--jade-bright); text-decoration: none; }
+
+    footer a:hover { color: var(--jade); }
+
+    /* ============ タイピングバトル専用 ============ */
+
+    /* 部門タブ */
+    .tb-tabs {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .tb-tab {
+      flex: 1;
+      background: #0A0F0D;
+      color: var(--text-sub);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tb-tab.active {
+      background: var(--jade);
+      border-color: var(--jade);
+      color: #fff;
+    }
+
+    .tb-tab small {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      opacity: 0.85;
+    }
+
+    /* ボタン */
+    .tb-btn {
+      display: inline-block;
+      background: var(--jade);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.8rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+    }
+
+    .tb-btn:hover { background: var(--dark-jade); }
+
+    .tb-btn:disabled { opacity: 0.45; cursor: default; }
+
+    .tb-btn.sub {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+    }
+
+    .tb-btn.sub:hover { border-color: var(--jade-bright); color: var(--jade-bright); }
+
+    .tb-btn.yellow {
+      background: var(--accent-yellow);
+      color: #0C1210;
+    }
+
+    .tb-btn.yellow:hover { background: #e5bd45; }
+
+    /* 名前入力 */
+    .tb-name-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .tb-name-row label {
+      color: var(--jade-bright);
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+    }
+
+    .tb-name-input {
+      flex: 1;
+      min-width: 160px;
+      background: #0A0F0D;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 0.5rem 0.8rem;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .tb-name-input:focus { outline: none; border-color: var(--jade-bright); }
+
+    .tb-note { color: var(--text-sub); font-size: 0.88rem; }
+
+    .tb-note strong { color: var(--accent-yellow); }
+
+    .tb-best {
+      margin-top: 1rem;
+      padding: 0.7rem 1rem;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+    }
+
+    .tb-best strong { color: var(--accent-yellow); font-size: 1.05rem; }
+
+    /* プレイ画面 */
+    .tb-stage { position: relative; }
+
+    .tb-timebar-wrap {
+      height: 10px;
+      background: #0A0F0D;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .tb-timebar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--dark-jade), var(--jade-bright));
+      transition: width 0.1s linear;
+    }
+
+    .tb-timebar.low { background: linear-gradient(90deg, #a33, #e66); }
+
+    .tb-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      margin-bottom: 1rem;
+    }
+
+    .tb-status-row .tb-time {
+      font-family: "Courier New", monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .tb-status-row .tb-live-score { color: var(--jade-bright); font-weight: 700; }
+
+    .tb-sentence {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.6;
+      min-height: 3.4rem;
+    }
+
+    .tb-kana {
+      font-size: 1.15rem;
+      line-height: 1.9;
+      letter-spacing: 0.12em;
+      min-height: 3.2rem;
+      word-break: break-all;
+    }
+
+    .tb-kana .done { color: var(--dark-jade); }
+
+    .tb-kana .current {
+      color: var(--accent-yellow);
+      border-bottom: 2px solid var(--accent-yellow);
+    }
+
+    .tb-kana .todo { color: var(--text); }
+
+    .tb-stage.miss-flash .tb-kana { animation: tbShake 0.18s ease; }
+
+    @keyframes tbShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    .tb-romaji-line {
+      font-family: "Courier New", monospace;
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      min-height: 1.6rem;
+    }
+
+    .tb-romaji-line .buf { color: var(--jade-bright); font-weight: 700; }
+
+    .tb-next {
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+    }
+
+    .tb-next .en {
+      color: var(--jade-bright);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      margin-right: 0.6rem;
+    }
+
+    /* フリック入力欄 */
+    .tb-flick-input {
+      width: 100%;
+      background: #0A0F0D;
+      border: 1px solid var(--jade);
+      border-radius: 8px;
+      color: var(--jade-bright);
+      padding: 0.7rem 0.9rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      font-family: inherit;
+      margin-top: 0.6rem;
+    }
+
+    .tb-flick-input:focus { outline: none; border-color: var(--jade-bright); }
+
+    /* カウントダウン */
+    .tb-countdown {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(4, 8, 6, 0.82);
+      border-radius: 8px;
+      z-index: 5;
+    }
+
+    .tb-countdown.show { display: flex; }
+
+    .tb-countdown-num {
+      font-size: 4.2rem;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      font-family: "Courier New", monospace;
+      animation: tbCountPop 0.6s ease;
+    }
+
+    @keyframes tbCountPop {
+      0% { transform: scale(1.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* 結果画面 */
+    .tb-result-grid {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .tb-result-cell {
+      flex: 1;
+      min-width: 100px;
+      background: #0A0F0D;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 0.6rem;
+      text-align: center;
+    }
+
+    .tb-result-cell .k {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--text-sub);
+    }
+
+    .tb-result-cell .v {
+      font-size: 1.7rem;
+      font-weight: 800;
+      font-family: "Courier New", monospace;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .tb-result-cell .v.main { color: var(--jade-bright); }
+
+    .tb-newrecord {
+      display: none;
+      color: #0C1210;
+      background: var(--accent-yellow);
+      border-radius: 999px;
+      padding: 0.15rem 0.9rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+    }
+
+    .tb-newrecord.show { display: inline-block; }
+
+    .tb-submit-status { font-size: 0.88rem; color: var(--text-sub); margin-top: 0.6rem; min-height: 1.5rem; }
+
+    .tb-submit-status.ok { color: var(--jade-bright); }
+
+    .tb-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    .hidden { display: none !important; }
+
+    /* ランキング表 */
+    .tb-ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .tb-ranking-table th {
+      text-align: left;
+      color: var(--jade-bright);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tb-ranking-table td {
+      padding: 0.45rem 0.5rem;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .tb-ranking-table tr:last-child td { border-bottom: none; }
+
+    .tb-ranking-table .rank {
+      font-family: "Courier New", monospace;
+      font-weight: 700;
+      color: var(--text-sub);
+      width: 2.4rem;
+    }
+
+    .tb-ranking-table tr.top1 .rank { color: var(--accent-yellow); }
+
+    .tb-ranking-table tr.top1 .rname { color: var(--accent-yellow); font-weight: 700; }
+
+    .tb-ranking-table .num {
+      font-family: "Courier New", monospace;
+      text-align: right;
+    }
+
+    .tb-ranking-table th.num { text-align: right; }
+
+    .tb-ranking-table .rdate { color: var(--text-sub); font-size: 0.82rem; text-align: right; }
+
+    .tb-ranking-msg { color: var(--text-sub); font-size: 0.92rem; padding: 0.6rem 0; }
+
+    .tb-local-best {
+      margin-top: 1rem;
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      border-top: 1px dashed var(--border);
+      padding-top: 0.8rem;
+    }
+
+    .tb-local-best strong { color: var(--accent-yellow); }
+
+    @media (max-width: 600px) {
+      .hero-title { font-size: 1.6rem; }
+      .tb-sentence { font-size: 1.2rem; }
+      .tb-kana { font-size: 1.05rem; }
+      .tb-ranking-table { font-size: 0.85rem; }
+      .tb-ranking-table .rdate { display: none; }
+      .tb-ranking-table th.rdate-h { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="statusbar">
+    <span>HISU-PRO SYSTEM : <span class="online-dot"></span>ONLINE</span>
+    <span>SECRET BASE</span>
+  </div>
+
+  <!-- ヒーロー -->
+  <header class="hero">
+    <p class="hero-kicker">✦ TYPING BATTLE ✦</p>
+    <h1 class="hero-title">早打ちタイピング勝負<span class="exe">.exe</span></h1>
+    <p class="hero-lead">
+      ひみつきち限定のタイピング勝負。制限時間は60秒、スコアは正しく打てた「かな」の数。
+      PCのキーボード部門と、スマホのフリック部門は<strong>完全に別ランキング</strong>だから、端末の違いで揉めない公平設計。
+      代表のがめにぃはミカタイプ・寿司打で鍛えた腕の持ち主。勝てるかな？
+    </p>
+  </header>
+
+  <!-- ゲーム本体 -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-no">GAME</span>
+      <h2 class="section-title">TYPING BATTLE</h2>
+      <span class="section-sub">60秒の真剣勝負</span>
+    </div>
+
+    <div class="window">
+      <div class="window-bar"><span>TYPING_BATTLE.EXE</span><span class="win-x">×</span></div>
+      <div class="window-body">
+
+        <!-- 部門タブ -->
+        <div class="tb-tabs" role="tablist">
+          <button type="button" class="tb-tab active" id="tabKeyboard">⌨️ キーボード部門<small>KEYBOARD / PC</small></button>
+          <button type="button" class="tb-tab" id="tabFlick">📱 フリック部門<small>FLICK / SMARTPHONE</small></button>
+        </div>
+
+        <div class="tb-stage" id="tbStage">
+          <!-- カウントダウン -->
+          <div class="tb-countdown" id="tbCountdown"><span class="tb-countdown-num" id="tbCountdownNum">3</span></div>
+
+          <!-- スタート画面 -->
+          <div id="panelStart">
+            <p class="tb-note" id="modeDescKeyboard">
+              日本語の文章が出るので、<strong>ローマ字入力</strong>で打ってください。日本語入力（IME）はOFFにしてね。
+              「し」は shi でも si でもOK。いろんな打ち方が認められる、やさしい判定です。
+            </p>
+            <p class="tb-note hidden" id="modeDescFlick">
+              ひらがなのお題が出るので、下の入力欄に<strong>フリック入力でそのまま</strong>打ってください。
+              <strong>ひらがなのまま打ってね（漢字変換しない）</strong>。間違えた文字は入らないので、正しい文字を打ち直して進もう。
+            </p>
+            <div class="tb-name-row">
+              <label for="playerName">NAME</label>
+              <input type="text" class="tb-name-input" id="playerName" maxlength="12" placeholder="ゲスト" autocomplete="off">
+            </div>
+            <button type="button" class="tb-btn" id="btnStart">▶ スタート</button>
+            <div class="tb-best" id="startBest">自己ベスト：まだ記録がありません。最初の挑戦を待ってるよ。</div>
+          </div>
+
+          <!-- プレイ画面 -->
+          <div id="panelPlay" class="hidden">
+            <div class="tb-timebar-wrap"><div class="tb-timebar" id="tbTimebar"></div></div>
+            <div class="tb-status-row">
+              <span>残り <span class="tb-time" id="tbTimeLeft">60.0</span> 秒</span>
+              <span>スコア <span class="tb-live-score" id="tbLiveScore">0</span> ／ ミス <span id="tbLiveMiss">0</span></span>
+            </div>
+            <p class="tb-sentence" id="tbSentence"></p>
+            <p class="tb-kana" id="tbKana"></p>
+            <p class="tb-romaji-line" id="tbRomajiLine">入力中：<span class="buf" id="tbRomajiBuf"></span></p>
+            <input type="text" class="tb-flick-input hidden" id="tbFlickInput" placeholder="ここをタップしてフリック入力" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <p class="tb-next"><span class="en">NEXT</span><span id="tbNextSentence"></span></p>
+            <div class="tb-actions">
+              <button type="button" class="tb-btn sub" id="btnQuit">やめる</button>
+            </div>
+          </div>
+
+          <!-- 結果画面 -->
+          <div id="panelResult" class="hidden">
+            <p><span class="tb-newrecord" id="tbNewRecord">★ 自己ベスト更新！ ★</span></p>
+            <div class="tb-result-grid">
+              <div class="tb-result-cell"><div class="k">SCORE（かな）</div><div class="v main" id="resScore">0</div></div>
+              <div class="tb-result-cell"><div class="k">正確率</div><div class="v" id="resAccuracy">0%</div></div>
+              <div class="tb-result-cell"><div class="k">KPM</div><div class="v" id="resKpm">0</div></div>
+            </div>
+            <p class="tb-note" id="resBestLine"></p>
+            <div class="tb-actions">
+              <button type="button" class="tb-btn yellow" id="btnSubmit">🏆 ランキングに登録</button>
+              <button type="button" class="tb-btn" id="btnRetry">もう一度</button>
+              <button type="button" class="tb-btn sub" id="btnBack">部門選択に戻る</button>
+            </div>
+            <p class="tb-submit-status" id="submitStatus"></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ランキング -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-no">RANKING</span>
+      <h2 class="section-title">ランキング</h2>
+      <span class="section-sub" id="rankingModeLabel">キーボード部門 トップ10</span>
+    </div>
+
+    <div class="window">
+      <div class="window-bar"><span>RANKING.EXE</span><span class="win-x">×</span></div>
+      <div class="window-body">
+        <div id="rankingArea">
+          <p class="tb-ranking-msg">読み込み中…</p>
+        </div>
+        <div class="tb-local-best" id="rankingLocalBest"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><a href="himitsukichi.html">← ひみつきちに戻る</a></p>
+    <p style="margin-top: 0.8rem;">&copy; 2026 ひすプロ 裏サイト</p>
+  </footer>
+
+  <script>
+    'use strict';
+
+    /* ============================================================
+       ★ 共有ランキングの接続先 ★
+       GAS（Google Apps Script）のウェブアプリURLを、デプロイ後にここへ貼る。
+       手順は gas/README.md を参照。空のままでもゲームと端末内ベストは動きます。
+       ============================================================ */
+    const GAS_URL = "";
+
+    const GAME_SECONDS = 60;
+
+    /* ================= お題 ================= */
+    // キーボード部門：表示文（漢字かな混じり）＋ かな読み
+    const SENTENCES_KEYBOARD = [
+      { text: '北九州の夜はこれから始まる', kana: 'きたきゅうしゅうのよるはこれからはじまる' },
+      { text: '小倉の街を歩くのが好きだ', kana: 'こくらのまちをあるくのがすきだ' },
+      { text: 'ひすプロのひみつきちへようこそ', kana: 'ひすぷろのひみつきちへようこそ' },
+      { text: '門司港レトロで船を眺める', kana: 'もじこうれとろでふねをながめる' },
+      { text: '関門海峡の風が気持ちいい', kana: 'かんもんかいきょうのかぜがきもちいい' },
+      { text: '印刷機が今日も元気に回っている', kana: 'いんさつきがきょうもげんきにまわっている' },
+      { text: '夜勤明けの空がまぶしい', kana: 'やきんあけのそらがまぶしい' },
+      { text: '新しい名刺のデザインを考える', kana: 'あたらしいめいしのでざいんをかんがえる' },
+      { text: 'カクテルの氷がグラスで鳴る', kana: 'かくてるのこおりがぐらすでなる' },
+      { text: '深夜のバーで静かな時間をどうぞ', kana: 'しんやのばーでしずかなじかんをどうぞ' },
+      { text: '資さんうどんのごぼ天が食べたい', kana: 'すけさんうどんのごぼてんがたべたい' },
+      { text: '旦過市場で買い物をする', kana: 'たんがいちばでかいものをする' },
+      { text: '焼きカレー発祥の地は門司港だ', kana: 'やきかれーはっしょうのちはもじこうだ' },
+      { text: 'みんなで力を合わせて頑張ろう', kana: 'みんなでちからをあわせてがんばろう' },
+      { text: 'イベントの設営は任せてほしい', kana: 'いべんとのせつえいはまかせてほしい' },
+      { text: '今日のシフトも安全第一でいこう', kana: 'きょうのしふともあんぜんだいいちでいこう' },
+      { text: '皿倉山から見る夜景は日本一だ', kana: 'さらくらやまからみるやけいはにっぽんいちだ' },
+      { text: '勝山公園の桜が待ち遠しい', kana: 'かつやまこうえんのさくらがまちどおしい' },
+      { text: '北九州芸術劇場で舞台を見た', kana: 'きたきゅうしゅうげいじゅつげきじょうでぶたいをみた' },
+      { text: 'チラシの折り込み作業が終わった', kana: 'ちらしのおりこみさぎょうがおわった' },
+      { text: '音楽と笑顔があふれる場所にしたい', kana: 'おんがくとえがおがあふれるばしょにしたい' },
+      { text: '若松の渡し船に乗ってみたい', kana: 'わかまつのわたしぶねにのってみたい' },
+      { text: '平尾台の星空キャンプが楽しみ', kana: 'ひらおだいのほしぞらきゃんぷがたのしみ' },
+      { text: '明日もいい日になりますように', kana: 'あしたもいいひになりますように' }
+    ];
+
+    // フリック部門：ひらがなのみ（やや短め）
+    const SENTENCES_FLICK = [
+      'きたきゅうしゅうのよる',
+      'こくらのまちをあるく',
+      'ひすぷろのひみつきち',
+      'もじこうのやけい',
+      'かんもんかいきょう',
+      'いんさつきがまわる',
+      'やきんあけのそら',
+      'めいしをでざいんする',
+      'かくてるをつくる',
+      'しんやのばーでまつ',
+      'すけさんうどん',
+      'たんがいちばへいく',
+      'やきかれーがたべたい',
+      'みんなでがんばろう',
+      'いべんとのせつえい',
+      'あんぜんだいいち',
+      'さらくらやまにのぼる',
+      'こうえんのさくら',
+      'えいがをみにいく',
+      'ちらしをおりこむ',
+      'おんがくがすきだ',
+      'わたしぶねにのる',
+      'ほしぞらきゃんぷ',
+      'あしたもいいひに'
+    ];
+
+    /* ================= ローマ字判定エンジン ================= */
+    // かな → ローマ字パターン（複数綴り可）
+    const ROMAJI = {
+      'あ': ['a'], 'い': ['i'], 'う': ['u'], 'え': ['e'], 'お': ['o'],
+      'か': ['ka', 'ca'], 'き': ['ki'], 'く': ['ku', 'cu'], 'け': ['ke'], 'こ': ['ko', 'co'],
+      'さ': ['sa'], 'し': ['shi', 'si', 'ci'], 'す': ['su'], 'せ': ['se', 'ce'], 'そ': ['so'],
+      'た': ['ta'], 'ち': ['chi', 'ti'], 'つ': ['tsu', 'tu'], 'て': ['te'], 'と': ['to'],
+      'な': ['na'], 'に': ['ni'], 'ぬ': ['nu'], 'ね': ['ne'], 'の': ['no'],
+      'は': ['ha'], 'ひ': ['hi'], 'ふ': ['fu', 'hu'], 'へ': ['he'], 'ほ': ['ho'],
+      'ま': ['ma'], 'み': ['mi'], 'む': ['mu'], 'め': ['me'], 'も': ['mo'],
+      'や': ['ya'], 'ゆ': ['yu'], 'よ': ['yo'],
+      'ら': ['ra'], 'り': ['ri'], 'る': ['ru'], 'れ': ['re'], 'ろ': ['ro'],
+      'わ': ['wa'], 'を': ['wo'],
+      'が': ['ga'], 'ぎ': ['gi'], 'ぐ': ['gu'], 'げ': ['ge'], 'ご': ['go'],
+      'ざ': ['za'], 'じ': ['ji', 'zi'], 'ず': ['zu'], 'ぜ': ['ze'], 'ぞ': ['zo'],
+      'だ': ['da'], 'ぢ': ['di'], 'づ': ['du'], 'で': ['de'], 'ど': ['do'],
+      'ば': ['ba'], 'び': ['bi'], 'ぶ': ['bu'], 'べ': ['be'], 'ぼ': ['bo'],
+      'ぱ': ['pa'], 'ぴ': ['pi'], 'ぷ': ['pu'], 'ぺ': ['pe'], 'ぽ': ['po'],
+      'ー': ['-'],
+      'ぁ': ['xa', 'la'], 'ぃ': ['xi', 'li'], 'ぅ': ['xu', 'lu'], 'ぇ': ['xe', 'le'], 'ぉ': ['xo', 'lo'],
+      'ゃ': ['xya', 'lya'], 'ゅ': ['xyu', 'lyu'], 'ょ': ['xyo', 'lyo'], 'ゎ': ['xwa', 'lwa']
+    };
+
+    // 拗音など2文字ユニット
+    const YOUON = {
+      'きゃ': ['kya'], 'きゅ': ['kyu'], 'きょ': ['kyo'],
+      'しゃ': ['sha', 'sya'], 'しゅ': ['shu', 'syu'], 'しょ': ['sho', 'syo'],
+      'ちゃ': ['cha', 'tya', 'cya'], 'ちゅ': ['chu', 'tyu', 'cyu'], 'ちょ': ['cho', 'tyo', 'cyo'],
+      'にゃ': ['nya'], 'にゅ': ['nyu'], 'にょ': ['nyo'],
+      'ひゃ': ['hya'], 'ひゅ': ['hyu'], 'ひょ': ['hyo'],
+      'みゃ': ['mya'], 'みゅ': ['myu'], 'みょ': ['myo'],
+      'りゃ': ['rya'], 'りゅ': ['ryu'], 'りょ': ['ryo'],
+      'ぎゃ': ['gya'], 'ぎゅ': ['gyu'], 'ぎょ': ['gyo'],
+      'じゃ': ['ja', 'jya', 'zya'], 'じゅ': ['ju', 'jyu', 'zyu'], 'じょ': ['jo', 'jyo', 'zyo'],
+      'ぢゃ': ['dya'], 'ぢゅ': ['dyu'], 'ぢょ': ['dyo'],
+      'びゃ': ['bya'], 'びゅ': ['byu'], 'びょ': ['byo'],
+      'ぴゃ': ['pya'], 'ぴゅ': ['pyu'], 'ぴょ': ['pyo'],
+      'ふぁ': ['fa'], 'ふぃ': ['fi'], 'ふぇ': ['fe'], 'ふぉ': ['fo'],
+      'うぃ': ['wi'], 'うぇ': ['we'], 'うぉ': ['wo']
+    };
+
+    const SMALL_COMBO_SECOND = 'ゃゅょぁぃぅぇぉ';
+
+    // かな文字列をユニット列に分解する（ユニット: {kana, kind, patterns}）
+    function tokenizeKana(kana) {
+      const chars = Array.from(kana);
+      const units = [];
+      for (let i = 0; i < chars.length; i++) {
+        const c = chars[i];
+        if (c === 'っ') { units.push({ kana: 'っ', kind: 'sokuon', patterns: null }); continue; }
+        if (c === 'ん') { units.push({ kana: 'ん', kind: 'n', patterns: null }); continue; }
+        const next = chars[i + 1];
+        if (next && SMALL_COMBO_SECOND.indexOf(next) >= 0 && YOUON[c + next]) {
+          units.push({ kana: c + next, kind: 'normal', patterns: YOUON[c + next].slice() });
+          i++;
+          continue;
+        }
+        units.push({ kana: c, kind: 'normal', patterns: (ROMAJI[c] || []).slice() });
+      }
+      // 文脈依存のパターン（っ・ん）を確定させる
+      for (let i = 0; i < units.length; i++) {
+        const u = units[i];
+        const nextUnit = units[i + 1] || null;
+        if (u.kind === 'sokuon') {
+          const pats = ['xtu', 'ltu', 'xtsu', 'ltsu'];
+          if (nextUnit && nextUnit.kind === 'normal' && nextUnit.patterns) {
+            const firsts = {};
+            nextUnit.patterns.forEach(function (p) {
+              const f = p.charAt(0);
+              // 母音始まりと x/l 始まり（小書きかな用）は子音の重ねにならないので除外
+              if ('aiueoxl'.indexOf(f) < 0) firsts[f] = true;
+            });
+            Object.keys(firsts).forEach(function (f) { pats.push(f); });
+          }
+          u.patterns = pats;
+        } else if (u.kind === 'n') {
+          const pats = ['nn', "n'"];
+          if (nextUnit && nextUnit.kind === 'normal' && nextUnit.patterns && nextUnit.patterns.length) {
+            // 次のユニットの頭文字がすべて「母音・y・n」以外なら n 1回でも確定可
+            const ok = nextUnit.patterns.every(function (p) {
+              const f = p.charAt(0);
+              return 'aiueoyn'.indexOf(f) < 0;
+            });
+            if (ok) pats.push('n');
+          }
+          u.patterns = pats;
+        }
+      }
+      return units;
+    }
+
+    /* ================= 状態管理 ================= */
+    const $ = function (id) { return document.getElementById(id); };
+
+    let mode = 'keyboard'; // 'keyboard' | 'flick'
+    let state = 'idle';    // 'idle' | 'countdown' | 'playing' | 'finished'
+
+    // キーボード部門用
+    let kbSentences = [];   // シャッフル済みお題キュー
+    let kbIndex = 0;        // 現在のお題番号
+    let kbUnits = [];       // 現在のお題のユニット列
+    let kbUnitIdx = 0;      // 現在のユニット
+    let kbBuffer = '';      // 現在ユニットへの入力途中ローマ字
+
+    // フリック部門用
+    let flSentences = [];
+    let flIndex = 0;
+    let flPos = 0;          // 現在のお題で確定済みの文字数
+    let flCommitted = '';   // 入力欄に表示する確定済み文字列
+
+    // 共通スコア
+    let score = 0;          // 正しく打てたかな文字数
+    let okKeys = 0;         // 正解入力数（キーボード=打鍵数 / フリック=文字数）
+    let missKeys = 0;       // ミス数
+    let startAt = 0;
+    let timerId = null;
+    let lastResult = null;  // {mode, score, accuracy, kpm}
+    let submitted = false;
+
+    /* ================= ユーティリティ ================= */
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    // 前のお題と重ならないようにキューを作り直す
+    function makeQueue(sentences, lastItem) {
+      let q = shuffle(sentences);
+      if (lastItem && q.length > 1 && q[0] === lastItem) {
+        const t = q[0]; q[0] = q[1]; q[1] = t;
+      }
+      return q;
+    }
+
+    function todayStr() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function formatDate(s) {
+      if (!s) return '';
+      const d = new Date(s);
+      if (isNaN(d.getTime())) return String(s).slice(0, 10);
+      return (d.getMonth() + 1) + '/' + d.getDate();
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    /* ================= 端末内ベスト ================= */
+    function bestKey(m) { return 'hisupro_typing_best_' + m; }
+
+    function loadBest(m) {
+      try {
+        const raw = localStorage.getItem(bestKey(m));
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+
+    function saveBest(m, rec) {
+      try { localStorage.setItem(bestKey(m), JSON.stringify(rec)); } catch (e) { /* 保存できなくても続行 */ }
+    }
+
+    function bestText(rec) {
+      if (!rec) return '自己ベスト：まだ記録がありません。最初の挑戦を待ってるよ。';
+      return '自己ベスト：<strong>' + rec.score + '</strong> かな（正確率 ' + rec.accuracy + '% ／ KPM ' + rec.kpm + ' ／ ' + formatDate(rec.date) + '）';
+    }
+
+    function loadName() {
+      try { return localStorage.getItem('hisupro_typing_name') || ''; } catch (e) { return ''; }
+    }
+
+    function saveName(name) {
+      try { localStorage.setItem('hisupro_typing_name', name); } catch (e) { /* ignore */ }
+    }
+
+    function playerName() {
+      const v = ($('playerName').value || '').trim().slice(0, 12);
+      return v || 'ゲスト';
+    }
+
+    /* ================= 画面切り替え ================= */
+    function showPanel(name) {
+      $('panelStart').classList.toggle('hidden', name !== 'start');
+      $('panelPlay').classList.toggle('hidden', name !== 'play');
+      $('panelResult').classList.toggle('hidden', name !== 'result');
+    }
+
+    function setMode(newMode) {
+      if (state === 'playing' || state === 'countdown') stopTimer();
+      mode = newMode;
+      state = 'idle';
+      $('tabKeyboard').classList.toggle('active', mode === 'keyboard');
+      $('tabFlick').classList.toggle('active', mode === 'flick');
+      $('modeDescKeyboard').classList.toggle('hidden', mode !== 'keyboard');
+      $('modeDescFlick').classList.toggle('hidden', mode !== 'flick');
+      $('startBest').innerHTML = bestText(loadBest(mode));
+      $('rankingModeLabel').textContent = (mode === 'keyboard' ? 'キーボード部門' : 'フリック部門') + ' トップ10';
+      showPanel('start');
+      loadRanking(mode);
+      renderLocalBestLine();
+    }
+
+    /* ================= ゲーム進行 ================= */
+    function startGame() {
+      saveName(($('playerName').value || '').trim().slice(0, 12));
+      score = 0; okKeys = 0; missKeys = 0; submitted = false; lastResult = null;
+      if (mode === 'keyboard') {
+        kbSentences = makeQueue(SENTENCES_KEYBOARD, null);
+        kbIndex = 0;
+        setKbSentence(0);
+      } else {
+        flSentences = makeQueue(SENTENCES_FLICK, null);
+        flIndex = 0;
+        setFlSentence(0);
+      }
+      showPanel('play');
+      $('tbRomajiLine').classList.toggle('hidden', mode !== 'keyboard');
+      $('tbFlickInput').classList.toggle('hidden', mode !== 'flick');
+      $('tbFlickInput').value = '';
+      updateLive();
+      runCountdown(function () {
+        state = 'playing';
+        startAt = Date.now();
+        timerId = setInterval(tickTimer, 100);
+        tickTimer();
+        if (mode === 'flick') $('tbFlickInput').focus();
+      });
+    }
+
+    function runCountdown(done) {
+      state = 'countdown';
+      const overlay = $('tbCountdown');
+      const numEl = $('tbCountdownNum');
+      overlay.classList.add('show');
+      const seq = ['3', '2', '1', 'GO!'];
+      let i = 0;
+      (function step() {
+        numEl.textContent = seq[i];
+        numEl.style.animation = 'none';
+        void numEl.offsetWidth; // アニメーション再起動
+        numEl.style.animation = '';
+        i++;
+        if (i < seq.length) {
+          setTimeout(step, 700);
+        } else {
+          setTimeout(function () {
+            overlay.classList.remove('show');
+            done();
+          }, 450);
+        }
+      })();
+    }
+
+    function tickTimer() {
+      const elapsed = (Date.now() - startAt) / 1000;
+      const left = Math.max(0, GAME_SECONDS - elapsed);
+      $('tbTimeLeft').textContent = left.toFixed(1);
+      const bar = $('tbTimebar');
+      bar.style.width = (left / GAME_SECONDS * 100) + '%';
+      bar.classList.toggle('low', left <= 10);
+      if (left <= 0) finishGame();
+    }
+
+    function stopTimer() {
+      if (timerId) { clearInterval(timerId); timerId = null; }
+      $('tbCountdown').classList.remove('show');
+    }
+
+    function quitGame() {
+      stopTimer();
+      state = 'idle';
+      showPanel('start');
+    }
+
+    function finishGame() {
+      stopTimer();
+      state = 'finished';
+      const elapsed = Math.min(GAME_SECONDS, (Date.now() - startAt) / 1000) || GAME_SECONDS;
+      const total = okKeys + missKeys;
+      const accuracy = total > 0 ? Math.round(okKeys / total * 1000) / 10 : 100;
+      const kpm = Math.round(score / (elapsed / 60));
+      lastResult = { mode: mode, score: score, accuracy: accuracy, kpm: kpm };
+
+      const prevBest = loadBest(mode);
+      const isRecord = !prevBest || score > prevBest.score;
+      if (isRecord) {
+        saveBest(mode, { score: score, accuracy: accuracy, kpm: kpm, date: todayStr() });
+      }
+
+      $('resScore').textContent = score;
+      $('resAccuracy').textContent = accuracy + '%';
+      $('resKpm').textContent = kpm;
+      $('tbNewRecord').classList.toggle('show', isRecord);
+      $('resBestLine').innerHTML = bestText(loadBest(mode));
+      $('submitStatus').textContent = '';
+      $('submitStatus').className = 'tb-submit-status';
+      $('btnSubmit').disabled = false;
+      showPanel('result');
+      renderLocalBestLine();
+    }
+
+    function updateLive() {
+      $('tbLiveScore').textContent = score;
+      $('tbLiveMiss').textContent = missKeys;
+    }
+
+    function flashMiss() {
+      const stage = $('tbStage');
+      stage.classList.remove('miss-flash');
+      void stage.offsetWidth;
+      stage.classList.add('miss-flash');
+    }
+
+    /* ---------- キーボード部門 ---------- */
+    function setKbSentence(idx) {
+      const s = kbSentences[idx];
+      kbUnits = tokenizeKana(s.kana);
+      kbUnitIdx = 0;
+      kbBuffer = '';
+      renderKb();
+    }
+
+    function nextKbSentence() {
+      kbIndex++;
+      if (kbIndex >= kbSentences.length) {
+        kbSentences = makeQueue(SENTENCES_KEYBOARD, kbSentences[kbSentences.length - 1]);
+        kbIndex = 0;
+      }
+      setKbSentence(kbIndex);
+    }
+
+    function renderKb() {
+      const s = kbSentences[kbIndex];
+      $('tbSentence').textContent = s.text;
+      // かな表示：確定済み／現在ユニット／未入力を色分け
+      let doneChars = 0;
+      for (let i = 0; i < kbUnitIdx; i++) doneChars += kbUnits[i].kana.length;
+      const curLen = kbUnits[kbUnitIdx] ? kbUnits[kbUnitIdx].kana.length : 0;
+      const kanaChars = Array.from(s.kana);
+      let html = '';
+      kanaChars.forEach(function (ch, i) {
+        let cls = 'todo';
+        if (i < doneChars) cls = 'done';
+        else if (i < doneChars + curLen) cls = 'current';
+        html += '<span class="' + cls + '">' + escapeHtml(ch) + '</span>';
+      });
+      $('tbKana').innerHTML = html;
+      $('tbRomajiBuf').textContent = kbBuffer;
+      const next = kbSentences[(kbIndex + 1) % kbSentences.length];
+      $('tbNextSentence').textContent = next ? next.text : '';
+    }
+
+    // 現在のユニットを確定して次へ進む
+    function completeKbUnit() {
+      const unit = kbUnits[kbUnitIdx];
+      score += unit.kana.length;
+      kbUnitIdx++;
+      kbBuffer = '';
+      if (kbUnitIdx >= kbUnits.length) nextKbSentence();
+      else renderKb();
+    }
+
+    // 現在のユニットに1文字入れてみる。受け付けたら true
+    function feedToCurrentUnit(ch) {
+      const unit = kbUnits[kbUnitIdx];
+      if (!unit || !unit.patterns) return false;
+      const cand = kbBuffer + ch;
+      let isPrefix = false;
+      let isComplete = false;
+      let hasLonger = false;
+      unit.patterns.forEach(function (p) {
+        if (p === cand) isComplete = true;
+        if (p.indexOf(cand) === 0) {
+          isPrefix = true;
+          if (p.length > cand.length) hasLonger = true;
+        }
+      });
+      if (!isPrefix) return false;
+      okKeys++;
+      kbBuffer = cand;
+      // 確定できる綴りでも、より長い綴りの途中なら確定を保留する
+      // （例：「ん」は n でも nn でもよい → n を打った時点では保留し、次のキーで判断）
+      if (isComplete && !hasLonger) completeKbUnit();
+      else renderKb();
+      return true;
+    }
+
+    function feedKey(ch) {
+      if (feedToCurrentUnit(ch)) { updateLive(); return; }
+      // 保留中のバッファが確定綴りだったら、前のユニットを確定させてから打ち直す
+      const unit = kbUnits[kbUnitIdx];
+      if (unit && kbBuffer && unit.patterns.indexOf(kbBuffer) >= 0) {
+        completeKbUnit();
+        if (feedToCurrentUnit(ch)) { updateLive(); return; }
+      }
+      missKeys++;
+      flashMiss();
+      updateLive();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (state !== 'playing' || mode !== 'keyboard') return;
+      const t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const ch = e.key;
+      if (!ch || ch.length !== 1) return;
+      const lower = ch.toLowerCase();
+      if (!/^[a-z'-]$/.test(lower)) return;
+      e.preventDefault();
+      feedKey(lower);
+    });
+
+    /* ---------- フリック部門 ---------- */
+    function setFlSentence(idx) {
+      flPos = 0;
+      flCommitted = '';
+      const input = $('tbFlickInput');
+      input.value = '';
+      renderFl();
+    }
+
+    function nextFlSentence() {
+      flIndex++;
+      if (flIndex >= flSentences.length) {
+        flSentences = makeQueue(SENTENCES_FLICK, flSentences[flSentences.length - 1]);
+        flIndex = 0;
+      }
+      setFlSentence(flIndex);
+    }
+
+    function renderFl() {
+      const s = flSentences[flIndex];
+      $('tbSentence').textContent = 'ひらがなで打ってね';
+      const chars = Array.from(s);
+      let html = '';
+      chars.forEach(function (ch, i) {
+        let cls = 'todo';
+        if (i < flPos) cls = 'done';
+        else if (i === flPos) cls = 'current';
+        html += '<span class="' + cls + '">' + escapeHtml(ch) + '</span>';
+      });
+      $('tbKana').innerHTML = html;
+      const next = flSentences[(flIndex + 1) % flSentences.length];
+      $('tbNextSentence').textContent = next || '';
+    }
+
+    function judgeFlChar(ch) {
+      const s = flSentences[flIndex];
+      const expected = Array.from(s)[flPos];
+      if (ch === expected) {
+        okKeys++;
+        score++;
+        flPos++;
+        flCommitted += ch;
+        if (flPos >= Array.from(s).length) {
+          nextFlSentence();
+        } else {
+          renderFl();
+        }
+      } else {
+        missKeys++;
+        flashMiss();
+      }
+      updateLive();
+    }
+
+    function handleFlInput(e) {
+      if (state !== 'playing' || mode !== 'flick') return;
+      if (e && e.isComposing) return; // 変換中は確定まで待つ
+      const input = $('tbFlickInput');
+      const val = input.value;
+      if (val === flCommitted) return;
+      if (val.length > flCommitted.length && val.indexOf(flCommitted) === 0) {
+        // 追加された文字を1文字ずつ判定（文を打ち終えたら次の文へそのまま流れ込む）
+        const added = Array.from(val.slice(flCommitted.length));
+        added.forEach(function (ch) { judgeFlChar(ch); });
+      }
+      // 間違った文字・削除はフィールドに残さない（確定済み文字列に戻す）
+      input.value = flCommitted;
+    }
+
+    $('tbFlickInput').addEventListener('input', handleFlInput);
+    $('tbFlickInput').addEventListener('compositionend', function () { handleFlInput(null); });
+    $('panelPlay').addEventListener('click', function () {
+      if (state === 'playing' && mode === 'flick') $('tbFlickInput').focus();
+    });
+
+    /* ================= ランキング ================= */
+    function renderRankingRows(rows) {
+      if (!rows || rows.length === 0) {
+        $('rankingArea').innerHTML = '<p class="tb-ranking-msg">まだ記録がありません。最初のランクインを狙おう！</p>';
+        return;
+      }
+      const top = rows.slice(0, 10);
+      let html = '<table class="tb-ranking-table"><thead><tr>' +
+        '<th>順位</th><th>名前</th><th class="num">スコア</th><th class="num">正確率</th><th class="num">KPM</th><th class="rdate-h" style="text-align:right;">日付</th>' +
+        '</tr></thead><tbody>';
+      top.forEach(function (r, i) {
+        html += '<tr' + (i === 0 ? ' class="top1"' : '') + '>' +
+          '<td class="rank">' + (i + 1) + '</td>' +
+          '<td class="rname">' + escapeHtml(r.name || 'ゲスト') + '</td>' +
+          '<td class="num">' + r.score + '</td>' +
+          '<td class="num">' + r.accuracy + '%</td>' +
+          '<td class="num">' + r.kpm + '</td>' +
+          '<td class="rdate">' + escapeHtml(formatDate(r.date)) + '</td>' +
+          '</tr>';
+      });
+      html += '</tbody></table>';
+      $('rankingArea').innerHTML = html;
+    }
+
+    function renderLocalBestLine() {
+      const rec = loadBest(mode);
+      if (!rec) {
+        $('rankingLocalBest').innerHTML = 'この端末の自己ベスト（' + (mode === 'keyboard' ? 'キーボード部門' : 'フリック部門') + '）：まだありません。';
+      } else {
+        $('rankingLocalBest').innerHTML = 'この端末の自己ベスト（' + (mode === 'keyboard' ? 'キーボード部門' : 'フリック部門') + '）：' +
+          '<strong>' + rec.score + '</strong> かな（正確率 ' + rec.accuracy + '% ／ KPM ' + rec.kpm + ' ／ ' + formatDate(rec.date) + '）';
+      }
+    }
+
+    function loadRanking(m) {
+      if (!GAS_URL) {
+        $('rankingArea').innerHTML = '<p class="tb-ranking-msg">🌐 共有ランキングは準備中です。もう少し待っててね。<br>いまは端末内の自己ベストで勝負しよう。</p>';
+        return;
+      }
+      $('rankingArea').innerHTML = '<p class="tb-ranking-msg">読み込み中…</p>';
+      fetch(GAS_URL + '?mode=' + encodeURIComponent(m), { method: 'GET' })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (m !== mode) return; // 部門が切り替わっていたら破棄
+          if (data && data.ok) renderRankingRows(data.rows);
+          else throw new Error('bad response');
+        })
+        .catch(function () {
+          if (m !== mode) return;
+          $('rankingArea').innerHTML = '<p class="tb-ranking-msg">ランキングを取得できませんでした（通信エラー）。ゲームはそのまま遊べます。</p>';
+        });
+    }
+
+    function submitScore() {
+      if (!lastResult || submitted) return;
+      const status = $('submitStatus');
+      if (!GAS_URL) {
+        status.textContent = '共有ランキングは準備中のため、まだ登録できません。端末内の自己ベストには記録済みです。';
+        return;
+      }
+      submitted = true;
+      $('btnSubmit').disabled = true;
+      status.textContent = '登録中…';
+      status.className = 'tb-submit-status';
+      const payload = {
+        mode: lastResult.mode,
+        name: playerName(),
+        score: lastResult.score,
+        accuracy: lastResult.accuracy,
+        kpm: lastResult.kpm
+      };
+      fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) {
+            status.textContent = '🏆 ランキングに登録しました！';
+            status.className = 'tb-submit-status ok';
+            loadRanking(mode);
+          } else {
+            throw new Error('bad response');
+          }
+        })
+        .catch(function () {
+          submitted = false;
+          $('btnSubmit').disabled = false;
+          status.textContent = '登録に失敗しました（通信エラー）。もう一度押してみてね。';
+        });
+    }
+
+    /* ================= イベント登録 ================= */
+    $('tabKeyboard').addEventListener('click', function () { setMode('keyboard'); });
+    $('tabFlick').addEventListener('click', function () { setMode('flick'); });
+    $('btnStart').addEventListener('click', startGame);
+    $('btnQuit').addEventListener('click', quitGame);
+    $('btnRetry').addEventListener('click', startGame);
+    $('btnBack').addEventListener('click', function () { setMode(mode); });
+    $('btnSubmit').addEventListener('click', submitScore);
+    $('playerName').addEventListener('change', function () {
+      saveName(($('playerName').value || '').trim().slice(0, 12));
+    });
+
+    /* ================= 初期化 ================= */
+    $('playerName').value = loadName();
+    setMode('keyboard');
+  </script>
+
+</body>
+</html>

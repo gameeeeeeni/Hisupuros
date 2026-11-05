@@ -354,6 +354,21 @@
       to { transform: translateY(105vh) rotate(720deg); opacity: 0.9; }
     }
 
+    /* --- タイピングバトル --- */
+    .battle-btn {
+      display: inline-block;
+      margin-top: 1.1rem;
+      background: var(--jade);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.55rem 1.8rem;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .battle-btn:hover { background: var(--dark-jade); }
+
     /* --- フッター --- */
     footer {
       text-align: center;
@@ -515,6 +530,40 @@
           <li><span class="en">Q&amp;A</span>がめにぃに質問！</li>
           <li><span class="en">DIARY</span>代表のひとりごと</li>
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- タイピングバトル -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-no">05 / TYPING BATTLE</span>
+      <h2 class="section-title">早打ちタイピング勝負</h2>
+      <span class="section-sub">60秒の真剣勝負</span>
+    </div>
+
+    <div class="window">
+      <div class="window-bar"><span>TYPING_BATTLE.EXE</span><span class="win-x">×</span></div>
+      <div class="window-body">
+        <span class="story-tag">NEW GAME</span>
+        <h3 class="story-title">あなたの指、どれくらい速い？</h3>
+        <p class="story-body">
+          ひみつきち限定の早打ちタイピングゲームができました。制限時間60秒で、正しく打てた「かな」の数を競います。
+          スコアはみんなのランキングに登録できるから、見つけた者同士で勝負しよう。
+        </p>
+        <div class="data-row">
+          <div class="data-key">KEYBOARD</div>
+          <div class="data-val">キーボード部門（PC） ― 日本語の文章をローマ字入力。寿司打・ミカタイプ式</div>
+        </div>
+        <div class="data-row">
+          <div class="data-key">FLICK</div>
+          <div class="data-val">フリック部門（スマホ） ― ひらがなをフリック入力でそのまま打つ、スマホ専用部門</div>
+        </div>
+        <p class="story-body" style="margin-top: 0.8rem;">
+          部門は完全に分かれているから、端末の違いは言い訳にならない公平設計。
+          代表はミカタイプ・寿司打で鍛えた腕の持ち主。ランキングで待ってるよ。
+        </p>
+        <a class="battle-btn" href="typing.html">▶ 勝負しに行く</a>
       </div>
     </div>
   </section>
