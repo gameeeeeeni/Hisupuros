@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>印刷代行サービス | ひすプロ</title>
+    <meta
+      name="description"
+      content="ひすプロ（HISU-PRO）の印刷代行サービスのご案内ページです。チラシ・フライヤーなどの印刷を、ご相談から発送まで一括で代行します。入稿データをお持ちの方は印刷手配のみでもOK。デザイン制作もオプションで承ります。"
+    />
+    <style>
+      /* --- カラー定義 & 基本設定 --- */
+      :root {
+        --primary-jade: #00A381;
+        --dark-jade: #00785E;
+        --light-jade: #E8F5F1;
+        --accent-yellow: #F6D067;
+        --bg-white: #FFFFFF;
+        --bg-offwhite: #F9FBFA;
+        --text-main: #2C3333;
+        --text-sub: #596E79;
+        --border-color: #E2E8E5;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "BIZ UDPGothic", Meiryo, sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg-white);
+        line-height: 1.8;
+        letter-spacing: 0.05em;
+      }
+
+      a {
+        color: var(--primary-jade);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--dark-jade);
+      }
+
+      /* --- ナビゲーションバー --- */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 5%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        border-bottom: 1px solid var(--border-color);
+        z-index: 100;
+      }
+
+      .brand-logo-img {
+        height: 46px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+      }
+
+      .nav-links a {
+        color: var(--text-main);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .nav-links a.active,
+      .nav-links a:hover {
+        color: var(--primary-jade);
+      }
+
+      /* --- ページヘッダー --- */
+      .page-header {
+        background: linear-gradient(135deg, #ffffff 60%, var(--light-jade) 100%);
+        padding: 3.5rem 5% 3rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .page-en {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--primary-jade);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.3rem;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 0.8rem;
+      }
+
+      .page-lead {
+        color: var(--text-sub);
+        font-size: 0.95rem;
+        max-width: 620px;
+        margin: 0 auto;
+      }
+
+      /* --- 共通セクションスタイル --- */
+      .section {
+        padding: 4rem 5%;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .section-bg {
+        background-color: var(--bg-offwhite);
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .section-bg .section {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.8rem;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background-color: var(--primary-jade);
+        border-radius: 2px;
+      }
+
+      .section-en {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--primary-jade);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.3rem;
+      }
+
+      .section-lead {
+        max-width: 720px;
+        margin: 0 auto 2.5rem;
+        color: var(--text-sub);
+        font-size: 0.98rem;
+        text-align: center;
+      }
+
+      /* --- ご利用の流れ --- */
+      .flow-steps {
+        list-style: none;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .flow-step {
+        display: flex;
+        gap: 1.2rem;
+        padding: 1.2rem 0;
+        border-bottom: 1px dashed var(--border-color);
+      }
+
+      .flow-step:last-child {
+        border-bottom: none;
+      }
+
+      .flow-num {
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: var(--primary-jade);
+        color: #fff;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+      }
+
+      .flow-body h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .flow-body p {
+        font-size: 0.92rem;
+        color: var(--text-sub);
+      }
+
+      /* --- 案内ボックス --- */
+      .style-box {
+        background-color: var(--light-jade);
+        border-radius: 8px;
+        padding: 2.2rem;
+        max-width: 820px;
+        margin: 0 auto;
+      }
+
+      .style-box p {
+        font-size: 0.98rem;
+        line-height: 1.9;
+      }
+
+      .style-box p + p {
+        margin-top: 1rem;
+      }
+
+      .style-box .box-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark-jade);
+        margin-bottom: 0.8rem;
+      }
+
+      /* --- 料金テーブル --- */
+      .price-table {
+        width: 100%;
+        max-width: 820px;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background: var(--bg-white);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+      }
+
+      .price-table th,
+      .price-table td {
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .price-table tr:last-child th,
+      .price-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .price-table th {
+        width: 32%;
+        background-color: var(--light-jade);
+        color: var(--dark-jade);
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+
+      .price-table td {
+        font-size: 0.95rem;
+      }
+
+      .price-table .price {
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .price-note {
+        max-width: 820px;
+        margin: 1rem auto 0;
+        font-size: 0.85rem;
+        color: #888;
+      }
+
+      /* --- CTA --- */
+      .cta-box {
+        text-align: center;
+        background: var(--bg-offwhite);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 3rem 2rem;
+      }
+
+      .btn-contact {
+        display: inline-block;
+        background-color: var(--primary-jade);
+        color: #fff;
+        padding: 0.9rem 2.4rem;
+        border-radius: 4px;
+        font-weight: 600;
+        box-shadow: 0 4px 14px rgba(0, 163, 129, 0.25);
+        transition: all 0.3s ease;
+      }
+
+      .btn-contact:hover {
+        background-color: var(--dark-jade);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 163, 129, 0.35);
+      }
+
+      .cta-note {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: 1rem;
+      }
+
+      footer {
+        background-color: #1a2522;
+        color: #9ab3ac;
+        text-align: center;
+        padding: 2.5rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      footer a {
+        color: #9ab3ac;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        .navbar {
+          padding: 0.8rem 4%;
+        }
+        .brand-logo-img {
+          height: 36px;
+        }
+        .page-title {
+          font-size: 1.8rem;
+        }
+        .style-box {
+          padding: 1.6rem;
+        }
+        .price-table th,
+        .price-table td {
+          display: block;
+          width: 100%;
+        }
+        .price-table th {
+          padding-bottom: 0.4rem;
+          background-color: transparent;
+          color: var(--primary-jade);
+        }
+        .price-table td {
+          padding-top: 0.2rem;
+          padding-bottom: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ナビゲーションバー -->
+    <header class="navbar">
+      <a href="index.html" class="brand-logo-wrap">
+        <img src="logo.png" alt="ひすプロ ロゴ" class="brand-logo-img" />
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html#services">事業内容</a></li>
+          <li><a href="print.html" class="active">印刷代行</a></li>
+          <li><a href="member.html">メンバー</a></li>
+          <li><a href="member-join.html">会員登録</a></li>
+          <li><a href="index.html#company">概要</a></li>
+          <li><a href="index.html#contact">連絡先</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+      <span class="page-en">Printing Service</span>
+      <h1 class="page-title">印刷代行サービス</h1>
+      <p class="page-lead">
+        チラシ・フライヤーなどの印刷を、相談から発送まで一括で代行します。<br />
+        データをお持ちの方は、印刷手配のみでもOKです。
+      </p>
+    </section>
+
+    <!-- 基本プラン（印刷手配代行） -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-en">Basic Plan</span>
+        <h2 class="section-title">基本プラン（印刷手配代行）</h2>
+      </div>
+
+      <p class="section-lead">
+        印刷したいデータはあるけれど、「印刷会社の手配や入稿が面倒」「納期や部数の相談をしながら進めたい」という方のためのプランです。仕様の確認から印刷手配、ご指定先への発送までをひすプロが代行します。
+      </p>
+
+      <ol class="flow-steps">
+        <li class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-body">
+            <h3>ご相談</h3>
+            <p>刷りたいものの種類・サイズ・部数・ご希望の納期などをうかがいます。「何部刷ればいいか分からない」といった段階からのご相談も歓迎です。</p>
+          </div>
+        </li>
+        <li class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-body">
+            <h3>お見積もり</h3>
+            <p>仕様に合わせて印刷実費と手数料を算出し、金額をご提示します。内容にご納得いただいてから手配に進みます。</p>
+          </div>
+        </li>
+        <li class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-body">
+            <h3>入稿データの確認</h3>
+            <p>お持ちのデータをお預かりし、サイズや解像度など、印刷に必要な条件を満たしているかを確認します。</p>
+          </div>
+        </li>
+        <li class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-body">
+            <h3>印刷手配</h3>
+            <p>確認が取れたデータで印刷会社へ手配します。進行状況は随時ご連絡します。</p>
+          </div>
+        </li>
+        <li class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-body">
+            <h3>ご指定先へ発送</h3>
+            <p>仕上がった印刷物を、ご指定の住所へ発送します。イベント会場や店舗への直送のご相談も可能です。</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="style-box" style="margin-top: 2.5rem;">
+        <p class="box-title">代行手数料の目安</p>
+        <p>
+          代行手数料は、<strong>印刷実費の20%（最低2,000円）＋送料実費</strong>が目安です。印刷実費は、サイズ・部数・用紙・納期などの仕様によって変動します。まずはお見積もりにてご確認ください。
+        </p>
+      </div>
+    </section>
+
+    <!-- オプション（デザイン制作） -->
+    <div class="section-bg">
+      <section class="section">
+        <div class="section-header">
+          <span class="section-en">Option</span>
+          <h2 class="section-title">オプション（デザイン制作）</h2>
+        </div>
+
+        <p class="section-lead">
+          「印刷したいけれど、デザインからお願いしたい」という方は、デザイン制作をオプションで追加できます。完成したデザインは印刷手配までそのまま進められます。
+        </p>
+
+        <table class="price-table">
+          <tr>
+            <th>チラシデザイン（片面）</th>
+            <td><span class="price">12,000円〜</span>（目安・税込）</td>
+          </tr>
+          <tr>
+            <th>チラシデザイン（両面）</th>
+            <td><span class="price">20,000円〜</span>（目安・税込）</td>
+          </tr>
+        </table>
+
+        <div class="style-box" style="margin-top: 2rem;">
+          <p>
+            デザイン制作にはAIツールを活用し、担当者が仕上がりを確認・調整してお渡しします。載せたい文章や写真、ロゴなどの素材をご用意いただけると、よりスムーズに制作できます。
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 料金例 -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-en">Price Example</span>
+        <h2 class="section-title">料金例</h2>
+      </div>
+
+      <p class="section-lead">
+        A4両面カラー・1,000部を印刷する場合の料金例です。
+      </p>
+
+      <table class="price-table">
+        <tr>
+          <th>印刷手配のみ（基本プラン）</th>
+          <td>
+            印刷実費 <span class="price">3,470円</span> ＋ 代行手数料 <span class="price">2,000円</span> ＋ 送料実費<br />
+            <span style="color: var(--text-sub); font-size: 0.9rem;">合計 5,470円 ＋ 送料（目安・税込）</span>
+          </td>
+        </tr>
+        <tr>
+          <th>デザイン制作込み（基本プラン＋オプション）</th>
+          <td>
+            <span class="price">総額 25,000円程度</span>（目安・税込）<br />
+            <span style="color: var(--text-sub); font-size: 0.9rem;">両面デザイン制作＋印刷実費＋代行手数料＋送料を含む目安です</span>
+          </td>
+        </tr>
+      </table>
+      <p class="price-note">
+        ※上記はすべて目安（税込）です。印刷実費は、仕様（サイズ・部数・用紙・色数）や印刷会社の料金改定などにより変動します。正式な金額は、お見積もりにてご案内します。
+      </p>
+
+      <div class="style-box" style="margin-top: 2.5rem;">
+        <p class="box-title">横断幕の制作・手配について</p>
+        <p>
+          イベントや店舗で使う横断幕の制作・手配もご相談いただけます（対応業者経由での制作となります）。サイズや仕様に応じてお見積もりしますので、お気軽にお問い合わせください。
+        </p>
+      </div>
+    </section>
+
+    <!-- 見積もり依頼 -->
+    <section class="section" style="padding-top: 0;">
+      <div class="cta-box">
+        <div class="section-header" style="margin-bottom: 1.5rem;">
+          <span class="section-en">Estimate</span>
+          <h2 class="section-title">見積もり依頼</h2>
+        </div>
+        <p style="color: var(--text-sub); max-width: 640px; margin: 0 auto;">
+          「チラシを刷りたい」「横断幕を作りたい」など、まずはお気軽にご相談ください。仕様が決まっていない段階でも、お見積もりからご案内します。
+        </p>
+        <div style="margin-top: 2rem;">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfrHtFgHP_7Szu3F0D5i7siv1TNyJDIW0o0DfxAUZb0oHrTkQ/viewform" target="_blank" rel="noopener" class="btn-contact">見積もりを依頼する</a>
+          <p class="cta-note">※フォームが開きます。必要事項をご記入のうえ送信してください</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+      <p>&copy; 2026 ひすプロ All Rights Reserved.</p>
+    </footer>
+  </body>
+</html>
