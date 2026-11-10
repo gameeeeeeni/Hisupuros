@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /himitsukichi.html
+
+Sitemap: https://hisupro.com/sitemap.xml
