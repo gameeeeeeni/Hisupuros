@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex">
+<title>フリック打鍵マスター | スマホ専用フリックタイピング</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent;}
+html, body { margin: 0; padding: 0;}
+body {
+font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
+background: linear-gradient(160deg, #06352b 0%, #00A381 130%);
+color: #123;
+min-height: 100vh;
+display: flex; justify-content: center;
+}
+#app { width: 100%; max-width: 480px; padding: 14px 14px 28px;}
+header { text-align: center; color: #fff; padding: 10px 0 4px;}
+header h1 { margin: 0; font-size: 26px; letter-spacing:.04em; text-shadow: 0 2px 8px rgba(0,0,0,.35);}
+header p { margin: 4px 0 0; font-size: 12px; opacity:.9;}
+.card {
+background: #fff; border-radius: 16px; padding: 18px 16px;
+box-shadow: 0 10px 30px rgba(0,0,0,.25); margin-top: 14px;
+}
+.hidden { display: none!important;}
+.mode-btn {
+display: block; width: 100%; border: 0; cursor: pointer;
+border-radius: 12px; padding: 16px 14px; margin: 10px 0;
+background: linear-gradient(135deg, #00A381, #00705c); color: #fff;
+font-size: 18px; font-weight: 700; text-align: left;
+box-shadow: 0 4px 12px rgba(0,120,95,.35);
+}
+.mode-btn small { display: block; font-size: 12px; font-weight: 400; opacity:.92; margin-top: 3px;}
+.mode-btn.alt { background: linear-gradient(135deg, #2b3a67, #101a36); box-shadow: 0 4px 12px rgba(20,30,70,.35);}
+.best { font-size: 13px; color: #456; text-align: center; margin-top: 10px; line-height: 1.7;}
+.howto { font-size: 13px; color: #456; line-height: 1.8; background: #f2f8f6; border-radius: 10px; padding: 10px 12px; margin-top: 12px;}
+/* HUD */
+.hud { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #234;}
+.hud.score { font-size: 20px; color: #00705c;}
+.hud.combo { font-size: 14px; color: #d2691e; min-height: 20px;}
+.hud.lives { font-size: 16px; letter-spacing: 2px;}
+.timebar-wrap { height: 8px; background: #e3efec; border-radius: 99px; overflow: hidden; margin: 10px 0 4px;}
+#timebar { height: 100%; width: 100%; background: linear-gradient(90deg, #00A381, #37c8a5); transition: width.1s linear;}
+#timelabel { font-size: 12px; color: #678; text-align: right;}
+/* Sprint */
+#word-display { text-align: center; font-size: 40px; font-weight: 800; color: #123; margin: 14px 0 2px; letter-spacing:.06em;}
+#word-kana { text-align: center; font-size: 24px; letter-spacing:.18em; margin-bottom: 8px; min-height: 34px;}
+#word-kana.done { color: #00A381;}
+#word-kana.rest { color: #9db8b2;}
+/* Survival field */
+#field {
+position: relative; height: 46vh; min-height: 300px;
+background: linear-gradient(180deg, #0e2233, #123a30);
+border-radius: 12px; overflow: hidden; margin-top: 8px;
+}
+#field.floor { position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: #e5484d; opacity:.85;}
+.chip {
+position: absolute; transform: translate(-50%, 0);
+background: #fff; color: #123; border-radius: 999px;
+padding: 7px 14px; font-weight: 700; font-size: 17px; white-space: nowrap;
+box-shadow: 0 4px 10px rgba(0,0,0,.35); border: 2px solid #00A381;
+}
+.chip small { display: block; text-align: center; font-size: 11px; color: #00705c; letter-spacing:.12em;}
+#field.danger { animation: dangerflash.3s;}
+@keyframes dangerflash { 0% { box-shadow: inset 0 0 0 4px #e5484d;} 100% { box-shadow: inset 0 0 0 0 transparent;}}
+.shake { animation: shake.25s;}
+@keyframes shake { 0%,100% { transform: translateX(0);} 25% { transform: translateX(-6px);} 75% { transform: translateX(6px);}}
+/* Input */
+#type-input {
+width: 100%; font-size: 20px; padding: 14px 12px; margin-top: 12px;
+border: 2px solid #00A381; border-radius: 12px; outline: none; text-align: center;
+background: #fbfffe;
+}
+#type-input.err { border-color: #e5484d; background: #fff5f5;}
+.sub-btn {
+display: inline-block; border: 0; cursor: pointer; border-radius: 10px;
+padding: 11px 22px; margin-top: 14px; font-size: 15px; font-weight: 700;
+background: #00A381; color: #fff;
+}
+.ghost-btn {
+display: inline-block; border: 2px solid #b9d4ce; cursor: pointer; border-radius: 10px;
+padding: 9px 18px; margin-top: 14px; font-size: 14px; font-weight: 700;
+background: #fff; color: #456;
+}
+.center { text-align: center;}
+/* Result */
+#result-score { font-size: 44px; font-weight: 800; color: #00705c; text-align: center; margin: 6px 0;}
+.stats { width: 100%; border-collapse: collapse; margin-top: 8px;}
+.stats td { padding: 8px 6px; border-bottom: 1px solid #e6efec; font-size: 15px;}
+.stats td:last-child { text-align: right; font-weight: 700;}
+.newbest { text-align: center; color: #d2691e; font-weight: 800; margin-top: 6px;}
+footer { text-align: center; color: rgba(255,255,255,.85); font-size: 11px; margin-top: 16px;}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+<h1>フリック打鍵マスター</h1>
+<p>スマホ専用・フリック入力タイピング</p>
+</header>
+
+<!-- START -->
+<section id="screen-start" class="card">
+<button class="mode-btn" id="btn-sprint">⏱ 60秒スプリント
+<small>単語を次々と打って、60秒でスコアを競う</small>
+</button>
+<button class="mode-btn alt" id="btn-survival">⬇ サバイバル
+<small>落ちてくる単語を、床に着く前に打って消せ！ 3回落としたら終了</small>
+</button>
+<div class="best" id="best-line"></div>
+<div class="howto">
+スマホのキーボードを<strong>フリック入力</strong>にして、出てきた単語の「かな」をそのまま打ってね。入力欄をタップするとキーボードが出るよ。
+</div>
+</section>
+
+<!-- GAME -->
+<section id="screen-game" class="card hidden">
+<div class="hud">
+<div class="score">SCORE <span id="hud-score">0</span></div>
+<div class="combo" id="hud-combo"></div>
+<div class="lives" id="hud-lives"></div>
+</div>
+<div id="sprint-ui">
+<div class="timebar-wrap"><div id="timebar"></div></div>
+<div id="timelabel">60.0</div>
+<div id="word-display">　</div>
+<div id="word-kana"></div>
+</div>
+<div id="survival-ui" class="hidden">
+<div id="field"><div class="floor"></div></div>
+</div>
+<input id="type-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ここをタップして入力">
+<div class="center">
+<button class="ghost-btn" id="btn-quit">やめる</button>
+</div>
+</section>
+
+<!-- RESULT -->
+<section id="screen-result" class="card hidden">
+<div class="center" style="font-weight:700;color:#456;" id="result-mode"></div>
+<div id="result-score">0</div>
+<div class="newbest hidden" id="result-newbest">🎉 自己ベスト更新！</div>
+<table class="stats">
+<tr><td>打った単語</td><td id="st-words">0</td></tr>
+<tr><td>最大コンボ</td><td id="st-combo">0</td></tr>
+<tr><td>正確率</td><td id="st-acc">0%</td></tr>
+</table>
+<div class="center">
+<button class="sub-btn" id="btn-retry">もう一回</button>
+<button class="ghost-btn" id="btn-home">モード選択へ</button>
+</div>
+</section>
+
+<footer>目指せ！打鍵マスター スマホ版（試作）</footer>
+</div>
+<script>
+const WORDS = [
+  {d:"桜",k:"さくら"},{d:"猫",k:"ねこ"},{d:"犬",k:"いぬ"},{d:"空",k:"そら"},
+  {d:"海",k:"うみ"},{d:"山",k:"やま"},{d:"川",k:"かわ"},{d:"雨",k:"あめ"},
+  {d:"雪",k:"ゆき"},{d:"星",k:"ほし"},{d:"月",k:"つき"},{d:"太陽",k:"たいよう"},
+  {d:"電車",k:"でんしゃ"},{d:"学校",k:"がっこう"},{d:"先生",k:"せんせい"},{d:"友達",k:"ともだち"},
+  {d:"家族",k:"かぞく"},{d:"仕事",k:"しごと"},{d:"休み",k:"やすみ"},{d:"旅行",k:"りょこう"},
+  {d:"紙",k:"かみ"},{d:"本",k:"ほん"},{d:"歌",k:"うた"},{d:"カラオケ",k:"からおけ"},
+  {d:"タバコ",k:"たばこ"},{d:"ハイボール",k:"はいぼーる"},{d:"りんご",k:"りんご"},{d:"みかん",k:"みかん"},
+  {d:"いちご",k:"いちご"},{d:"パンダ",k:"ぱんだ"},{d:"ウサギ",k:"うさぎ"},{d:"虹",k:"にじ"},
+  {d:"向日葵",k:"ひまわり"},{d:"朝顔",k:"あさがお"},{d:"風",k:"かぜ"},{d:"春",k:"はる"},
+  {d:"夏",k:"なつ"},{d:"秋",k:"あき"},{d:"冬",k:"ふゆ"},{d:"同窓会",k:"どうそうかい"},
+  {d:"高校",k:"こうこう"},{d:"卒業",k:"そつぎょう"},{d:"乾杯",k:"かんぱい"},{d:"居酒屋",k:"いざかや"},
+  {d:"焼き鳥",k:"やきとり"},{d:"ラーメン",k:"らーめん"},{d:"うどん",k:"うどん"},{d:"寿司",k:"すし"},
+  {d:"カレー",k:"かれー"},{d:"コーヒー",k:"こーひー"},{d:"スマホ",k:"すまほ"},{d:"ゲーム",k:"げーむ"},
+  {d:"タイピング",k:"たいぴんぐ"},{d:"フリック",k:"ふりっく"},{d:"チャンピオン",k:"ちゃんぴおん"},{d:"全国大会",k:"ぜんこくたいかい"},
+  {d:"挑戦",k:"ちょうせん"},{d:"優勝",k:"ゆうしょう"},{d:"努力",k:"どりょく"},{d:"夢",k:"ゆめ"},
+  {d:"未来",k:"みらい"},{d:"始まり",k:"はじまり"}
+];
+const $ = id => document.getElementById(id);
+const screens = { start: $('screen-start'), game: $('screen-game'), result: $('screen-result') };
+function show(name){ for (const k in screens) screens[k].classList.toggle('hidden', k !== name); }
+function pickWord(except){ let w; do { w = WORDS[Math.floor(Math.random()*WORDS.length)]; } while (except && w.k === except.k); return w; }
+
+let mode = null, running = false;
+let score, combo, maxCombo, wordsCleared, correctChars, errors;
+let cur = null, prevVal = "";
+let timeLeft = 60, timerId = null;
+let chips = [], chipSeq = 0, lives = 3, spawnEvery = 1.7, spawnTimer = 0, lastTs = 0, rafId = null, elapsed = 0;
+
+function resetStats(){ score = 0; combo = 0; maxCombo = 0; wordsCleared = 0; correctChars = 0; errors = 0; updateHUD(); }
+function updateHUD(){
+  $('hud-score').textContent = score;
+  $('hud-combo').textContent = combo >= 2 ? combo + " コンボ！" : "";
+  $('hud-lives').textContent = mode === 'survival' ? "❤️".repeat(lives) : "";
+}
+function flashErr(inp){
+  inp.classList.add('err');
+  const target = mode === 'sprint' ? $('word-kana') : $('field');
+  target.classList.remove('shake'); void target.offsetWidth; target.classList.add('shake');
+  setTimeout(() => inp.classList.remove('err'), 180);
+}
+function renderBest(){
+  const s = parseInt(localStorage.getItem('flickBestSprint') || '0', 10);
+  const v = parseInt(localStorage.getItem('flickBestSurvival') || '0', 10);
+  const parts = [];
+  if (s > 0) parts.push("スプリント自己ベスト：" + s);
+  if (v > 0) parts.push("サバイバル自己ベスト：" + v);
+  $('best-line').textContent = parts.join("　／　");
+}
+
+/* ---------- SPRINT ---------- */
+function startSprint(){
+  mode = 'sprint'; resetStats();
+  show('game');
+  $('sprint-ui').classList.remove('hidden');
+  $('survival-ui').classList.add('hidden');
+  timeLeft = 60; $('timebar').style.width = '100%'; $('timelabel').textContent = '60.0';
+  nextWord();
+  const inp = $('type-input'); inp.value = ''; prevVal = '';
+  running = true; inp.focus();
+  timerId = setInterval(() => {
+    timeLeft -= 0.1;
+    if (timeLeft <= 0) { timeLeft = 0; endGame(); }
+    $('timebar').style.width = (timeLeft / 60 * 100) + '%';
+    $('timelabel').textContent = timeLeft.toFixed(1);
+  }, 100);
+}
+function nextWord(){
+  cur = pickWord(cur); prevVal = '';
+  $('word-display').textContent = cur.d;
+  renderKana('');
+}
+function renderKana(val){
+  const k = cur.k;
+  $('word-kana').innerHTML = '<span class="done">' + k.slice(0, val.length) + '</span><span class="rest">' + k.slice(val.length) + '</span>';
+}
+function sprintInput(inp, val){
+  const k = cur.k;
+  let l = 0;
+  while (l < val.length && l < k.length && val[l] === k[l]) l++;
+  if (val.length > l) {
+    if (val.length > prevVal.length) { errors++; combo = 0; updateHUD(); flashErr(inp); }
+    val = k.slice(0, l); inp.value = val;
+  } else if (val.length > prevVal.length) {
+    correctChars += (val.length - prevVal.length);
+  }
+  prevVal = val;
+  renderKana(val);
+  if (val === k) {
+    wordsCleared++; combo++; if (combo > maxCombo) maxCombo = combo;
+    score += k.length * 10 + combo * 2;
+    updateHUD(); nextWord(); inp.value = ''; prevVal = '';
+  }
+}
+
+/* ---------- SURVIVAL ---------- */
+function startSurvival(){
+  mode = 'survival'; resetStats(); lives = 3; updateHUD();
+  show('game');
+  $('sprint-ui').classList.add('hidden');
+  $('survival-ui').classList.remove('hidden');
+  $('field').innerHTML = '<div class="floor"></div>';
+  chips = []; elapsed = 0; spawnEvery = 1.7; spawnTimer = 0.4;
+  const inp = $('type-input'); inp.value = ''; prevVal = '';
+  running = true; inp.focus();
+  lastTs = performance.now();
+  rafId = requestAnimationFrame(tick);
+}
+function spawnChip(){
+  const w = pickWord(null);
+  const el = document.createElement('div');
+  el.className = 'chip';
+  el.innerHTML = w.d + '<small>' + w.k + '</small>';
+  el.style.left = (14 + Math.random() * 72) + '%';
+  el.style.top = '0px';
+  $('field').appendChild(el);
+  chips.push({ id: ++chipSeq, w: w, el: el, y: 0, speed: 34 + Math.random() * 22 + elapsed * 0.7 });
+}
+function tick(ts){
+  if (!running) return;
+  const dt = Math.min(0.05, (ts - lastTs) / 1000);
+  lastTs = ts; elapsed += dt;
+  spawnTimer -= dt;
+  if (spawnTimer <= 0) { spawnChip(); spawnEvery = Math.max(0.85, spawnEvery * 0.96); spawnTimer = spawnEvery; }
+  const H = $('field').clientHeight;
+  for (let i = chips.length - 1; i >= 0; i--) {
+    const c = chips[i];
+    c.y += c.speed * dt;
+    c.el.style.top = c.y + 'px';
+    if (c.y > H - 48) missChip(i);
+  }
+  if (running) rafId = requestAnimationFrame(tick);
+}
+function missChip(i){
+  chips[i].el.remove(); chips.splice(i, 1);
+  lives--; combo = 0; updateHUD();
+  const f = $('field');
+  f.classList.remove('danger'); void f.offsetWidth; f.classList.add('danger');
+  if (lives <= 0) endGame();
+}
+function survivalInput(inp, val){
+  if (!val) { prevVal = ''; return; }
+  const idx = chips.findIndex(c => c.w.k === val);
+  if (idx >= 0) {
+    const c = chips[idx];
+    c.el.remove(); chips.splice(idx, 1);
+    wordsCleared++; correctChars += c.w.k.length;
+    combo++; if (combo > maxCombo) maxCombo = combo;
+    score += c.w.k.length * 10 + combo * 3;
+    updateHUD(); inp.value = ''; prevVal = '';
+    return;
+  }
+  const anyPrefix = chips.some(c => c.w.k.startsWith(val));
+  if (!anyPrefix && val.length > prevVal.length) { errors++; flashErr(inp); }
+  prevVal = val;
+}
+
+/* ---------- COMMON ---------- */
+$('type-input').addEventListener('input', e => {
+  if (!running) return;
+  if (mode === 'sprint') sprintInput(e.target, e.target.value);
+  else survivalInput(e.target, e.target.value);
+});
+function stopLoops(){
+  running = false;
+  if (timerId) { clearInterval(timerId); timerId = null; }
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}
+function endGame(){
+  stopLoops();
+  $('type-input').blur();
+  const key = mode === 'sprint' ? 'flickBestSprint' : 'flickBestSurvival';
+  const prevBest = parseInt(localStorage.getItem(key) || '0', 10);
+  const isBest = score > prevBest;
+  if (isBest) localStorage.setItem(key, String(score));
+  $('result-mode').textContent = mode === 'sprint' ? '⏱ 60秒スプリント 結果' : '⬇ サバイバル 結果';
+  $('result-score').textContent = score;
+  $('result-newbest').classList.toggle('hidden', !isBest);
+  $('st-words').textContent = wordsCleared;
+  $('st-combo').textContent = maxCombo;
+  const tot = correctChars + errors;
+  $('st-acc').textContent = tot ? Math.round(correctChars / tot * 100) + '%' : '—';
+  show('result');
+  renderBest();
+}
+$('btn-sprint').addEventListener('click', startSprint);
+$('btn-survival').addEventListener('click', startSurvival);
+$('btn-quit').addEventListener('click', () => { stopLoops(); show('start'); renderBest(); });
+$('btn-retry').addEventListener('click', () => { if (mode === 'sprint') startSprint(); else startSurvival(); });
+$('btn-home').addEventListener('click', () => { show('start'); renderBest(); });
+renderBest();
+</script>
+</body>
+</html>
