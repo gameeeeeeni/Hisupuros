@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
 <meta name="robots" content="noindex">
 <title>フリック打鍵マスター | スマホ専用フリックタイピング</title>
 <style>
@@ -50,7 +50,8 @@ box-shadow: 0 4px 12px rgba(0,120,95,.35);
 #word-kana.rest { color: #9db8b2;}
 /* Survival field */
 #field {
-position: relative; height: 46vh; min-height: 300px;
+position: relative; height: 38vh; height: 38dvh; min-height: 170px;
+scroll-margin-top: 8px;
 background: linear-gradient(180deg, #0e2233, #123a30);
 border-radius: 12px; overflow: hidden; margin-top: 8px;
 }
@@ -251,6 +252,14 @@ function sprintInput(inp, val){
 }
 
 /* ---------- SURVIVAL ---------- */
+function fitField(){
+  if (mode !== 'survival') return;
+  const vv = window.visualViewport;
+  const h = vv ? vv.height : window.innerHeight;
+  $('field').style.height = Math.max(170, Math.floor(h * 0.36)) + 'px';
+}
+if (window.visualViewport) window.visualViewport.addEventListener('resize', fitField);
+
 function startSurvival(){
   mode = 'survival'; resetStats(); lives = 3; updateHUD();
   show('game');
@@ -260,6 +269,8 @@ function startSurvival(){
   chips = []; elapsed = 0; spawnEvery = 1.7; spawnTimer = 0.4;
   const inp = $('type-input'); inp.value = ''; prevVal = '';
   running = true; inp.focus();
+  fitField();
+  setTimeout(() => { fitField(); $('field').scrollIntoView({ block: 'start' }); }, 350);
   lastTs = performance.now();
   rafId = requestAnimationFrame(tick);
 }
