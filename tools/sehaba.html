@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>背幅・入稿サイズ計算ツール｜ひすプロ</title>
+<meta name="description" content="無線綴じ冊子の背幅と、塗り足し込みの入稿サイズをその場で計算できる無料ツール。ページ数と紙の種類を選ぶだけ。">
+<style>
+  :root{
+    --jade:#00A381;
+    --jade-dark:#007d63;
+    --jade-light:#e6f5f1;
+    --ink:#22302c;
+    --gray:#5c6b66;
+    --line:#d9e6e1;
+    --bg:#f7faf9;
+    --warn-bg:#fff7e6;
+    --warn-line:#f0d48a;
+    --warn-ink:#7a5b00;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;
+    -webkit-text-size-adjust:100%;
+  }
+  header{
+    background:var(--jade);color:#fff;
+    padding:28px 16px 24px;text-align:center;
+  }
+  header h1{font-size:1.45rem;line-height:1.4;letter-spacing:.02em;}
+  header p{font-size:.88rem;opacity:.92;margin-top:6px;}
+  main{max-width:720px;margin:0 auto;padding:20px 14px 40px;}
+  section{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:20px 18px;margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(0,60,45,.05);
+  }
+  h2{
+    font-size:1.12rem;color:var(--jade-dark);
+    border-left:5px solid var(--jade);padding-left:10px;margin-bottom:6px;
+  }
+  .sec-lead{font-size:.86rem;color:var(--gray);margin-bottom:16px;}
+  .field{margin-bottom:14px;}
+  label{display:block;font-size:.86rem;font-weight:700;margin-bottom:5px;}
+  label .unit{font-weight:400;color:var(--gray);font-size:.8rem;}
+  select,input[type="number"]{
+    width:100%;font-size:1rem;padding:11px 10px;
+    border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);
+    appearance:none;-webkit-appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2300A381' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  select:focus,input:focus{outline:2px solid var(--jade);outline-offset:1px;border-color:var(--jade);}
+  .row{display:flex;gap:10px;}
+  .row .field{flex:1;}
+  .hidden{display:none;}
+  .result{
+    background:var(--jade-light);border:1.5px solid var(--jade);
+    border-radius:10px;padding:16px;margin-top:16px;text-align:center;
+  }
+  .result .cap{font-size:.82rem;color:var(--jade-dark);font-weight:700;}
+  .result .big{font-size:2rem;font-weight:800;color:var(--jade-dark);line-height:1.3;}
+  .result .big small{font-size:1rem;font-weight:700;}
+  .result .recommend{font-size:.95rem;font-weight:700;margin-top:4px;}
+  .formula{font-size:.8rem;color:var(--gray);margin-top:8px;word-break:break-all;}
+  .guide{
+    margin-top:12px;font-size:.86rem;border-radius:8px;padding:11px 12px;
+    background:#fff;border:1px solid var(--line);text-align:left;
+  }
+  .guide.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink);}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:6px;}
+  th,td{border:1px solid var(--line);padding:8px 6px;text-align:center;}
+  th{background:var(--jade-light);color:var(--jade-dark);font-size:.84rem;}
+  td.size-name{font-weight:700;text-align:left;padding-left:10px;}
+  .note{
+    font-size:.8rem;color:var(--gray);background:#fff;
+    border:1px dashed var(--line);border-radius:10px;padding:14px 16px;
+  }
+  .note strong{color:var(--ink);}
+  footer{text-align:center;font-size:.78rem;color:var(--gray);padding:0 14px 30px;}
+  @media (max-width:480px){
+    header h1{font-size:1.25rem;}
+    .result .big{font-size:1.7rem;}
+    th,td{padding:7px 4px;font-size:.84rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>背幅・入稿サイズ計算ツール</h1>
+  <p>無線綴じ冊子の「背幅」と、塗り足し込みの「入稿サイズ」をその場で計算</p>
+</header>
+
+<main>
+
+  <!-- ============ 背幅計算 ============ -->
+  <section aria-labelledby="h-spine">
+    <h2 id="h-spine">1. 背幅計算（無線綴じ）</h2>
+    <p class="sec-lead">本文のページ数と紙の種類を選ぶと、表紙データに必要な背幅の目安が出ます。</p>
+
+    <div class="field">
+      <label for="pages">本文ページ数 <span class="unit">（表紙を除く本文のみ・偶数）</span></label>
+      <input type="number" id="pages" value="100" min="4" max="2000" step="2" inputmode="numeric">
+    </div>
+
+    <div class="field">
+      <label for="bodyPaper">本文用紙</label>
+      <select id="bodyPaper"></select>
+    </div>
+    <div class="field hidden" id="bodyCustomWrap">
+      <label for="bodyCustom">本文用紙の厚さ <span class="unit">（mm／枚）</span></label>
+      <input type="number" id="bodyCustom" value="0.10" min="0.01" max="1" step="0.001" inputmode="decimal">
+    </div>
+
+    <div class="field">
+      <label for="coverPaper">表紙用紙</label>
+      <select id="coverPaper"></select>
+    </div>
+    <div class="field hidden" id="coverCustomWrap">
+      <label for="coverCustom">表紙用紙の厚さ <span class="unit">（mm／枚）</span></label>
+      <input type="number" id="coverCustom" value="0.19" min="0.01" max="1" step="0.001" inputmode="decimal">
+    </div>
+
+    <div class="result" id="spineResult" aria-live="polite">
+      <div class="cap">計算上の背幅</div>
+      <div class="big"><span id="spineVal">—</span> <small>mm</small></div>
+      <div class="recommend" id="spineRecommend"></div>
+      <div class="formula" id="spineFormula"></div>
+      <div class="guide" id="spineGuide"></div>
+    </div>
+  </section>
+
+  <!-- ============ 入稿サイズ早見 ============ -->
+  <section aria-labelledby="h-size">
+    <h2 id="h-size">2. 入稿サイズ早見（塗り足し3mm）</h2>
+    <p class="sec-lead">仕上がりサイズに、上下左右3mmずつの塗り足しを加えた入稿データサイズです。</p>
+    <table>
+      <thead>
+        <tr><th>仕上がりサイズ</th><th>仕上がり（mm）</th><th>入稿サイズ（mm）</th></tr>
+      </thead>
+      <tbody id="sizeTableBody"></tbody>
+    </table>
+
+    <div style="height:16px"></div>
+    <p class="sec-lead" style="margin-bottom:10px;">一覧にないサイズは、こちらで計算できます。</p>
+    <div class="row">
+      <div class="field">
+        <label for="customW">仕上がり幅 <span class="unit">（mm）</span></label>
+        <input type="number" id="customW" value="210" min="10" max="2000" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="customH">仕上がり高さ <span class="unit">（mm）</span></label>
+        <input type="number" id="customH" value="297" min="10" max="2000" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="bleed">塗り足し <span class="unit">（mm）</span></label>
+        <select id="bleed">
+          <option value="0">0mm</option>
+          <option value="2">2mm</option>
+          <option value="3" selected>3mm（標準）</option>
+          <option value="5">5mm</option>
+        </select>
+      </div>
+    </div>
+    <div class="result" aria-live="polite">
+      <div class="cap">入稿サイズ</div>
+      <div class="big"><span id="customResult">—</span></div>
+      <div class="formula" id="customFormula"></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <strong>ご注意：</strong>このツールの数値はすべて<strong>目安</strong>です。紙の実際の厚さはメーカー・銘柄・ロットによって変わり、製本の仕様（糊の厚み・圧着具合）でも背幅は変動します。最終的な背幅・入稿サイズは、<strong>ご利用の印刷会社の指定・案内を必ずご確認ください</strong>。特に背幅は、印刷会社から正確な数値が案内される場合があります。
+  </div>
+
+</main>
+
+<footer>背幅・入稿サイズ計算ツール｜ひすプロ</footer>
+
+<script>
+/*CALC-START*/
+/* ===== 紙の厚さプリセット（mm／枚） =====
+   出典：印刷通販プリントパック「無線綴じ冊子」テクニカルガイド掲載の用紙厚み表（約値） */
+const BODY_PAPERS = [
+  { name: "上質紙 70kg（約0.10mm）",        thickness: 0.10  },
+  { name: "上質紙 90kg（約0.125mm）",       thickness: 0.125 },
+  { name: "上質紙 110kg（約0.15mm）",       thickness: 0.15  },
+  { name: "コート紙 90kg（約0.08mm）",      thickness: 0.08  },
+  { name: "コート紙 110kg（約0.10mm）",     thickness: 0.10  },
+  { name: "コート紙 135kg（約0.135mm）",    thickness: 0.135 },
+  { name: "マットコート紙 90kg（約0.10mm）",  thickness: 0.10  },
+  { name: "マットコート紙 110kg（約0.13mm）", thickness: 0.13  },
+  { name: "書籍クリーム 72.5kg（約0.09mm）",  thickness: 0.09  },
+  { name: "手入力",                          thickness: null  }
+];
+const COVER_PAPERS = [
+  { name: "表紙なし（本文のみで計算）",       thickness: 0     },
+  { name: "アートポスト紙 180kg（約0.19mm）", thickness: 0.19  },
+  { name: "コート紙 135kg（約0.135mm）",      thickness: 0.135 },
+  { name: "マットコート紙 180kg（約0.19mm）", thickness: 0.19  },
+  { name: "上質紙 180kg（約0.25mm）",         thickness: 0.25  },
+  { name: "手入力",                           thickness: null  }
+];
+
+/* ===== 仕上がりサイズ（JIS規格ほか、幅×高さ mm） ===== */
+const FINISH_SIZES = [
+  { name: "A4",      w: 210, h: 297 },
+  { name: "A5",      w: 148, h: 210 },
+  { name: "A6",      w: 105, h: 148 },
+  { name: "B4",      w: 257, h: 364 },
+  { name: "B5",      w: 182, h: 257 },
+  { name: "B6",      w: 128, h: 182 },
+  { name: "文庫判",   w: 105, h: 148 },
+  { name: "新書判",   w: 103, h: 182 },
+  { name: "ハガキ",   w: 100, h: 148 },
+  { name: "名刺",     w: 55,  h: 91  }
+];
+
+/* 背幅（mm）＝ 表紙用紙厚 × 2 ＋ 本文用紙厚 × 本文ページ数 ÷ 2
+   （プリントパックの算出方法に準拠） */
+function calcSpine(pages, bodyThickness, coverThickness) {
+  return coverThickness * 2 + bodyThickness * (pages / 2);
+}
+
+/* 推奨背幅：計算値を0.1mm単位で切り上げ（データ作成時の目安） */
+function recommendedSpine(spine) {
+  return Math.ceil(spine * 10) / 10;
+}
+
+/* 入稿サイズ＝ 仕上がり ＋ 塗り足し × 2（両側） */
+function submissionSize(w, h, bleed) {
+  return { w: w + bleed * 2, h: h + bleed * 2 };
+}
+/*CALC-END*/
+
+/* ===== 画面まわり ===== */
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const bodySel = $("bodyPaper"), coverSel = $("coverPaper");
+
+  BODY_PAPERS.forEach((p, i) => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = p.name;
+    if (i === 3) o.selected = true; /* 既定：コート紙90kg */
+    bodySel.appendChild(o);
+  });
+  COVER_PAPERS.forEach((p, i) => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = p.name;
+    if (i === 1) o.selected = true; /* 既定：アートポスト紙180kg */
+    coverSel.appendChild(o);
+  });
+
+  function fmt(n, digits) {
+    return n.toLocaleString("ja-JP", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  }
+
+  function spineGuideText(spine) {
+    if (spine < 2) {
+      return { warn: true, text: "背幅が2mm未満とかなり薄い仕上がりです。無線綴じでは製本できない・強度が足りない場合があります。ページ数を増やす、厚めの紙にする、中綴じへの変更もご検討ください。" };
+    }
+    if (spine < 3) {
+      return { warn: true, text: "背幅が3mm未満です。この薄さでは背に文字（背文字）は入れられません。背は無地にするか、ページ数・紙の見直しをご検討ください。" };
+    }
+    if (spine < 5) {
+      return { warn: false, text: "背文字は小さめの文字なら入れられます。文字が表紙・裏表紙へ回り込まないよう、背の中央に余裕をもって配置してください。" };
+    }
+    return { warn: false, text: "背文字も入れやすい厚さです。背のデザインは、製本時のわずかなズレに備えて背の中央寄りに配置すると安心です。" };
+  }
+
+  function updateSpine() {
+    const pages = parseFloat($("pages").value);
+    const b = BODY_PAPERS[Number(bodySel.value)];
+    const c = COVER_PAPERS[Number(coverSel.value)];
+    const bodyT = (b.thickness === null) ? parseFloat($("bodyCustom").value) : b.thickness;
+    const coverT = (c.thickness === null) ? parseFloat($("coverCustom").value) : c.thickness;
+
+    $("bodyCustomWrap").classList.toggle("hidden", b.thickness !== null);
+    $("coverCustomWrap").classList.toggle("hidden", c.thickness !== null);
+
+    if (!pages || pages <= 0 || !(bodyT > 0) || !(coverT >= 0)) {
+      $("spineVal").textContent = "—";
+      $("spineRecommend").textContent = "";
+      $("spineFormula").textContent = "";
+      $("spineGuide").textContent = "ページ数と用紙を入力してください。";
+      $("spineGuide").classList.remove("warn");
+      return;
+    }
+    const spine = calcSpine(pages, bodyT, coverT);
+    const rec = recommendedSpine(spine);
+    $("spineVal").textContent = fmt(spine, 2);
+    $("spineRecommend").textContent = "背幅は " + fmt(rec, 1) + " mm 以上を目安にデータ作成を";
+    let f = "計算式：";
+    if (coverT > 0) f += "表紙 " + coverT + "mm × 2 ＋ ";
+    f += "本文 " + bodyT + "mm × " + pages + "ページ ÷ 2";
+    if (pages % 2 !== 0) f += "　※ページ数は偶数が原則です（奇数の場合は印刷会社にご確認ください）";
+    $("spineFormula").textContent = f;
+    const g = spineGuideText(spine);
+    $("spineGuide").textContent = g.text;
+    $("spineGuide").classList.toggle("warn", g.warn);
+  }
+
+  /* 入稿サイズ早見表 */
+  const tbody = $("sizeTableBody");
+  FINISH_SIZES.forEach((s) => {
+    const sub = submissionSize(s.w, s.h, 3);
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td class='size-name'>" + s.name + "</td><td>" +
+      s.w + " × " + s.h + "</td><td><strong>" + sub.w + " × " + sub.h + "</strong></td>";
+    tbody.appendChild(tr);
+  });
+
+  function updateCustom() {
+    const w = parseFloat($("customW").value);
+    const h = parseFloat($("customH").value);
+    const bleed = parseFloat($("bleed").value);
+    if (!w || !h || w <= 0 || h <= 0) {
+      $("customResult").textContent = "—";
+      $("customFormula").textContent = "";
+      return;
+    }
+    const sub = submissionSize(w, h, bleed);
+    $("customResult").textContent = sub.w + " × " + sub.h + " mm";
+    $("customFormula").textContent = "計算式：（幅 " + w + " ＋ 塗り足し " + bleed + " × 2）×（高さ " + h + " ＋ 塗り足し " + bleed + " × 2）";
+  }
+
+  ["pages", "bodyCustom", "coverCustom", "customW", "customH"].forEach((id) => {
+    $(id).addEventListener("input", () => { updateSpine(); updateCustom(); });
+  });
+  [bodySel, coverSel, $("bleed")].forEach((el) => {
+    el.addEventListener("change", () => { updateSpine(); updateCustom(); });
+  });
+
+  updateSpine();
+  updateCustom();
+})();
+</script>
+</body>
+</html>
