@@ -147,6 +147,15 @@ footer { text-align: center; color: rgba(255,255,255,.85); font-size: 11px; marg
 <tr><td>最大コンボ</td><td id="st-combo">0</td></tr>
 <tr><td>正確率</td><td id="st-acc">0%</td></tr>
 </table>
+<div style="margin-top:14px;border-top:2px dashed #e6efec;padding-top:12px;">
+<div style="font-weight:700;color:#456;text-align:center;">🏆 みんなのランキング</div>
+<div style="display:flex;gap:8px;margin-top:10px;">
+<input id="rank-name" type="text" maxlength="12" placeholder="名前（12文字まで）" style="flex:1;font-size:16px;padding:10px;border:2px solid #b9d4ce;border-radius:10px;outline:none;">
+<button class="sub-btn" id="btn-rank-submit" style="margin-top:0;">登録</button>
+</div>
+<div id="rank-status" style="text-align:center;font-size:13px;color:#678;margin-top:8px;min-height:18px;"></div>
+<div id="rank-list" style="margin-top:6px;font-size:14px;"></div>
+</div>
 <div class="center">
 <button class="sub-btn" id="btn-retry">もう一回</button>
 <button class="ghost-btn" id="btn-home">モード選択へ</button>
@@ -323,6 +332,49 @@ function survivalInput(inp, val){
   prevVal = val;
 }
 
+/* ---------- RANKING ---------- */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzuaV8VysGagAvH9LMYOyq5sYGBNM84QZ4IwkhyNqH_kK-8mXYJAGodx5kKHV5laRjH/exec';
+let rankSubmitted = false;
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function currentAcc(){ const t = correctChars + errors; return t ? Math.round(correctChars / t * 100) : 100; }
+function currentKpm(){ if (mode === 'sprint') return correctChars; return elapsed > 0 ? Math.round(correctChars / (elapsed / 60)) : 0; }
+function loadRanking(){
+const area = $('rank-list');
+area.innerHTML = '<div style="color:#678;">読み込み中…</div>';
+fetch(GAS_URL + '?mode=flickgame', { method: 'GET' })
+.then(r => r.json())
+.then(data => {
+if (!data || !data.ok) throw new Error('bad');
+const rows = (data.rows || []).slice(0, 10);
+if (!rows.length) { area.innerHTML = '<div style="color:#678;">まだ記録がありません。最初のランクインを狙おう！</div>'; return; }
+let html = '<table class="stats">';
+rows.forEach((r, i) => { html += '<tr><td>' + (i + 1) + '位　' + esc(r.name || 'ゲスト') + '</td><td>' + r.score + '</td></tr>'; });
+area.innerHTML = html + '</table>';
+})
+.catch(() => { area.innerHTML = '<div style="color:#678;">ランキングを取得できませんでした（通信エラー）。</div>'; });
+}
+function submitRanking(){
+if (rankSubmitted) return;
+const name = (($('rank-name').value || '').trim().slice(0, 12)) || 'ゲスト';
+localStorage.setItem('flickPlayerName', name);
+rankSubmitted = true;
+$('btn-rank-submit').disabled = true;
+$('rank-status').textContent = '登録中…';
+fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ mode: 'flickgame', name: name, score: score, accuracy: currentAcc(), kpm: currentKpm() }) })
+.then(r => r.json())
+.then(data => {
+if (data && data.ok) { $('rank-status').textContent = '🏆 ランキングに登録しました！'; loadRanking(); }
+else throw new Error('bad');
+})
+.catch(() => {
+rankSubmitted = false;
+$('btn-rank-submit').disabled = false;
+$('rank-status').textContent = '登録に失敗しました（通信エラー）。もう一度押してみてね。';
+});
+}
+$('btn-rank-submit').addEventListener('click', submitRanking);
+$('rank-name').value = localStorage.getItem('flickPlayerName') || '';
+
 /* ---------- COMMON ---------- */
 $('type-input').addEventListener('input', e => {
   if (!running) return;
@@ -348,6 +400,10 @@ function endGame(){
   $('st-combo').textContent = maxCombo;
   const tot = correctChars + errors;
   $('st-acc').textContent = tot ? Math.round(correctChars / tot * 100) + '%' : '—';
+  rankSubmitted = false;
+  $('btn-rank-submit').disabled = false;
+  $('rank-status').textContent = '';
+  loadRanking();
   show('result');
   renderBest();
 }
